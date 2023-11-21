@@ -1,0 +1,57 @@
+services:
+  db_dev:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    container_name: recipes_postgres_dev
+    volumes:
+      - ./docker/pgdata:/var/lib/postgresql/data
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT_INNER}'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - recipes_dev
+
+  pgadmin_dev:
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    container_name: recipes_pgadmin4_dev
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - '${PGADMIN_PORT}:${PGADMIN_PORT_INTERNAL}'
+    depends_on:
+      - db_dev
+    networks:
+      - recipes_dev
+
+  server:
+    container_name: recipes_server
+    build:
+      context: ./
+      dockerfile: ./Dockerfile_dev
+    restart: unless-stopped
+    volumes:
+      - .:/home/node/app
+      - /home/node/app/node_modules
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
+    links:
+      - db_dev
+    depends_on:
+      db_dev:
+        condition: service_healthy
+    networks:
+      - recipes_dev
+
+networks:
+  recipes_dev:
+    driver: bridge

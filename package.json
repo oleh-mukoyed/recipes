@@ -1,0 +1,34 @@
+{
+  "name": "recipes_web_app",
+  "version": "1.0.0",
+  "description": "Recipes telegram web app",
+  "main": "index.js",
+  "repository": "https://github.com/oleh-mukoyed/recipes.git",
+  "author": "Oleh Mukoyed <oleh.mukoyed@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "prepare-dev-server": "cd packages/server && yarn install",
+    "prepare-dev-client": "cd packages/client && yarn install",
+    "prepare-dev-env": "yarn prepare-dev-server && yarn prepare-dev-client",
+    "generate-api-client": "docker compose --env-file packages/server/.env.development --env-file packages/client/.env.development -f compose.dev.yml up --force-recreate openapi_generator",
+    "update-api-client": "./scripts/update-api.bat",
+    "generate-and-update-api-client": "yarn generate-api-client && yarn update-api-client",
+    "docker:rebuild": "docker compose --env-file packages/server/.env.development --env-file packages/client/.env.development -f compose.dev.yml build --no-cache",
+    "start:database": "docker compose --env-file packages/server/.env.development --env-file packages/client/.env.development -f compose.dev.yml up -d db_dev",
+    "start": "docker compose --env-file packages/server/.env.development --env-file packages/client/.env.development -f compose.dev.yml up -d",
+    "release": "dotenv release-it",
+    "commit": "git-cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "devDependencies": {
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.3.0",
+    "release-it": "^17.0.0"
+  }
+}

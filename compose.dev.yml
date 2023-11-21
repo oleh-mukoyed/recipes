@@ -1,0 +1,104 @@
+services:
+  db_dev:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    container_name: recipes_postgres_dev
+    volumes:
+      - ./packages/server/docker/pgdata:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT_INNER}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - recipes_dev
+
+  pgadmin_dev:
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    container_name: recipes_pgadmin4_dev
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "${PGADMIN_PORT}:${PGADMIN_PORT_INTERNAL}"
+    depends_on:
+      - db_dev
+    networks:
+      - recipes_dev
+
+  server:
+    container_name: recipes_server
+    build:
+      context: ./packages/server
+      dockerfile: ./Dockerfile.dev
+    restart: unless-stopped
+    volumes:
+      - ./packages/server/src:/home/node/app/src
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+      - "${SERVER_HTTPS_PORT}:${SERVER_HTTPS_PORT}"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    links:
+      - db_dev
+    depends_on:
+      db_dev:
+        condition: service_healthy
+    networks:
+      - recipes_dev
+
+  client:
+    container_name: recipes_client
+    build:
+      context: ./packages/client
+      dockerfile: ./Dockerfile.dev
+    restart: unless-stopped
+    volumes:
+      - ./packages/client/src:/home/node/app/src
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
+    links:
+      - ngrok
+    depends_on:
+      - ngrok
+    networks:
+      - recipes_dev
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    volumes:
+      - ./packages/client/docker/ngrok.yml:/etc/ngrok.yml
+    ports:
+      - "${NGROK_PORT}:${NGROK_PORT}"
+    networks:
+      - recipes_dev
+
+  openapi_generator:
+    build:
+      context: ./tools/openapi-generator
+      dockerfile: ./Dockerfile
+    depends_on:
+      - server
+    volumes:
+      - ./tools/openapi-generator/.build:/local/out
+    networks:
+      - recipes_dev
+
+networks:
+  recipes_dev:
+    driver: bridge

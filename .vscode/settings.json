@@ -1,0 +1,35 @@
+{
+    //files eol
+    "files.eol": "\n",
+    //prettier
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnPaste": false, // required 
+    "editor.formatOnType": false, // required
+    "editor.formatOnSave": true, // optional 
+    "editor.formatOnSaveMode": "file", // required to format on save
+    "files.autoSave": "onFocusChange", // optional but recommended
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }, // set as "true" to run 'prettier' last not first
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    //jest plugin
+    "jest.autoRevealOutput": "on-run",
+    "jest.autoRun": "off",
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    //css
+    "files.associations": {
+        "*.css": "tailwindcss",
+        "*.scss": "postcss",
+        "*.module.scss": "postcss",
+    },
+    "editor.quickSuggestions": {
+        "strings": "on"
+    }
+}

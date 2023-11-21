@@ -1,0 +1,15 @@
+FROM node:alpine
+
+RUN mkdir -p /home/node/app
+WORKDIR /home/node/app
+
+COPY package.json .
+COPY .env.development .env
+
+RUN yarn install
+
+COPY  . .
+
+ENV NODE_ENV development
+
+CMD yarn dev

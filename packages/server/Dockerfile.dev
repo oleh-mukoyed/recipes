@@ -1,0 +1,19 @@
+FROM node:alpine
+
+RUN mkdir -p /home/node/app
+WORKDIR /home/node/app
+
+COPY package*.json .
+COPY .env.development .env
+
+RUN yarn install
+
+COPY . .
+
+ENV NODE_ENV development
+
+RUN npx prisma generate
+# RUN npx prisma migrate dev
+RUN npx prisma migrate deploy
+
+CMD yarn start:server:dev

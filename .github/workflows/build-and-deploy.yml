@@ -1,0 +1,99 @@
+name: Droplet
+
+on:
+  # push:
+  #   branches:
+  #     - main
+
+  release:
+    types: [published]
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image version"
+        required: true
+
+env:
+  REGISTRY: "registry.digitalocean.com/botcast"
+  REPOSITORY_NAME: "bot_cast_server"
+  IMAGE_NAME_SERVER: "recipes_server"
+  IMAGE_NAME_CLIENT: "recipes_client"
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      # server
+      - name: Build server container image
+        run: docker build --no-cache --pull -t $(echo $REGISTRY)/$(echo $REPOSITORY_NAME):$(echo $IMAGE_NAME_SERVER) -f ./packages/server/Dockerfile .
+      # client
+      - name: Build client container image
+        run: docker build --no-cache --pull -t $(echo $REGISTRY)/$(echo $REPOSITORY_NAME):$(echo $IMAGE_NAME_CLIENT) -f ./packages/client/Dockerfile .
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      # server
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $REPOSITORY_NAME):$(echo $IMAGE_NAME_SERVER)
+      # client
+      - name: Push client image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $REPOSITORY_NAME):$(echo $IMAGE_NAME_CLIENT)
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          envs: REPOSITORY_NAME,IMAGE_NAME_SERVER,IMAGE_NAME_CLIENT,REGISTRY,{{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},GITHUB_SHA
+          script: |
+            # Login to registry
+            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+
+            # Stop running container
+            docker stop $(echo $IMAGE_NAME_SERVER) $(echo $IMAGE_NAME_CLIENT)
+
+            # Remove old container
+            docker rm $(echo $IMAGE_NAME_SERVER) $(echo $IMAGE_NAME_CLIENT)
+
+            # Remove old images
+            docker rmi $(echo $REGISTRY)/$(echo $REPOSITORY_NAME):$(echo $IMAGE_NAME_CLIENT) $(echo $REGISTRY)/$(echo $REPOSITORY_NAME):$(echo $IMAGE_NAME_SERVER)
+
+            # Run server container from a new image
+            docker run -d -e "DATABASE_URL=${{ secrets.DATABASE_URL }}" \
+            -e "SERVER_PORT=${{ secrets.SERVER_PORT }}" \
+            -e "SERVER_HTTPS_PORT=${{ secrets.SERVER_HTTPS_PORT }}" \
+            -e "CLIENT_HOST=${{ secrets.CLIENT_HOST }}" \
+            -e "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}" \
+            -e "TELEGRAM_WEB_APP_URL=${{ secrets.TELEGRAM_WEB_APP_URL }}" \
+            -p ${{ secrets.SERVER_HTTPS_PORT }}:${{ secrets.SERVER_HTTPS_PORT }} \
+            -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
+            -v /root/recipes/secrets:/app/secrets \
+            --network bot_cast_server_bot_cast \
+            --restart always \
+            --name $(echo $IMAGE_NAME_SERVER) \
+            $(echo $REGISTRY)/$(echo $REPOSITORY_NAME):$(echo $IMAGE_NAME_SERVER)
+
+            # Run client container from a new image
+            docker run -d -p ${{ secrets.CLIENT_PORT }}:${{ secrets.CLIENT_INNER_PORT }} \
+            -v /root/recipes/secrets:/etc/nginx/certs/secrets \
+            --network bot_cast_server_bot_cast \
+            --restart always \
+            --name $(echo $IMAGE_NAME_CLIENT) \
+            $(echo $REGISTRY)/$(echo $REPOSITORY_NAME):$(echo $IMAGE_NAME_CLIENT)

@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  sort       Int      @default(500)
+  active     Boolean  @default(true)
+  telegramId String   @db.VarChar(255)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  info       String?
+  Dish       Dish[]
+}
+
+model Dish {
+  id          Int          @id @default(autoincrement())
+  sort        Int          @default(500)
+  active      Boolean      @default(true)
+  name        String       @db.VarChar(255)
+  notes       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+  ingredients Ingredient[]
+}
+
+model Ingredient {
+  id            Int         @id @default(autoincrement())
+  sort          Int         @default(500)
+  name          String      @db.VarChar(255)
+  number        String      @db.VarChar(255)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  measurementId Int
+  measurement   Measurement @relation(fields: [measurementId], references: [id])
+  dishId        Int?
+  dish          Dish?       @relation(fields: [dishId], references: [id], onDelete: Cascade)
+}
+
+model Measurement {
+  id              Int          @id @default(autoincrement())
+  sort            Int          @default(500)
+  name            String       @db.VarChar(255)
+  shortName       String       @db.VarChar(255)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  childMultiplier Float?
+  childId         Int?         @unique
+  child           Measurement? @relation("MeasurementRelations", fields: [childId], references: [id])
+  parent          Measurement? @relation("MeasurementRelations")
+  ingredients     Ingredient[]
+}
