@@ -30,9 +30,9 @@ export function DishView(): JSX.Element {
   }
 
   const compileShareUrl = (): string => {
-    let text = `\n**${dish.name}:**\n`;
+    let text = `${dish.name}:\n`;
     dish.ingredients.forEach((ingredient) => {
-      text += `- __${ingredient.name}__: ...... \`${ingredient.number}${ingredient.measurement.shortName}.\`\n`;
+      text += `- ${ingredient.name}: ...... ${ingredient.number}${ingredient.measurement.shortName}.\n`;
     });
 
     return `https://t.me/share/url?url=${encodeURIComponent(

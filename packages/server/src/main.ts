@@ -30,6 +30,8 @@ async function bootstrap() {
   if (env !== 'production') {
     certFilePath = './secrets/cert.pem';
     certKeyFilePath = './secrets/cert.key';
+    // certFilePath = './secrets/localhost.crt';
+    // certKeyFilePath = './secrets/localhost-privateKey.key';
   } else {
     /* app.enableCors({
       origin: configService.getClientHost(),
