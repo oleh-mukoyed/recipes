@@ -10,5 +10,5 @@ export const useMainButtonAdd = (): MainButton => {
     navigate(Paths.ADD_DISH_PAGE);
   };
 
-  return useMainButton({ text: "Add new dish", clickHandler: mainButtonClick });
+  return useMainButton({ text: "Add", clickHandler: mainButtonClick });
 };

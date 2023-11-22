@@ -1,6 +1,6 @@
 import noPhoto from "@assets/images/no_photo.png";
 import { useGetMeasurements } from "@features/measurement/hooks/useGetMeasurements";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   DishIngredientRemoveModal,
   DishIngredientRemoveModalParams,
@@ -24,6 +24,8 @@ import { Button, ButtonTypes } from "components/Button";
 import { Paths } from "pages/Paths";
 import { useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "hooks/useGetUserInfo";
+import { useMainButton } from "hooks/useMainButton";
+import { DEFAULT_BUTTON_COLOR } from "data/constants";
 
 export const AddDish = (): JSX.Element => {
   const { data: measurements, isLoading, error } = useGetMeasurements();
@@ -65,6 +67,15 @@ export const AddDish = (): JSX.Element => {
   const { fields, remove, append } = useFieldArray<AddDishDto>({
     control,
     name: "ingredients",
+  });
+
+  const submitButton = useRef<HTMLButtonElement>(null);
+
+  useMainButton({
+    text: "Save",
+    hideAfterClick: false,
+    color: DEFAULT_BUTTON_COLOR,
+    clickHandler: () => submitButton.current?.click(),
   });
 
   if (isLoading) return <>Loading...</>;
@@ -262,7 +273,10 @@ export const AddDish = (): JSX.Element => {
                   addClass="px-2 py-0.5"
                 />
               </div>
-              <Button text="Save" type="submit" />
+              {/* <Button text="Save" type="submit" /> */}
+              <button hidden={true} type="submit" ref={submitButton}>
+                Save
+              </button>
             </div>
           </div>
         </div>
