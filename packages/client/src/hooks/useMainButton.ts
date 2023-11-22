@@ -31,7 +31,7 @@ export const useMainButton = ({
       text: text,
       color: color,
     });
-    mainButton.show();
+    //mainButton.show();
     mainButton.onClick(mainButtonClick);
 
     return () => {

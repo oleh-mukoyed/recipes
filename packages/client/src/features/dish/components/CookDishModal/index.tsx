@@ -5,7 +5,7 @@ import { Input } from "components/Form/Input";
 import { Select } from "components/Form/Select";
 import { SelectOnFieldLabeled } from "components/Form/SelectOnFieldLabeled";
 import { useMainButton } from "hooks/useMainButton";
-import { ChangeEvent, Fragment, useState } from "react";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 
 interface Cook {
   number: string;
@@ -30,6 +30,10 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
     text: "Cook",
     clickHandler: cookButtonHandler,
   });
+
+  useEffect(() => {
+    mainButton.show();
+  }, []);
 
   const [checked, setChecked] = useState(
     new Array<boolean>().fill(false, 0, dish.ingredients.length - 1)
