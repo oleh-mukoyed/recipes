@@ -37,7 +37,7 @@ export const useMainButton = ({
     return () => {
       mainButton.offClick(mainButtonClick);
     };
-  }, []);
+  }, [text, color]);
 
   useEffect(() => {
     return () => {
