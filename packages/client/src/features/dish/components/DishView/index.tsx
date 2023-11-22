@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { ButtonTypes } from "components/Button";
 import { PaperAirplaneIcon } from "@heroicons/react/20/solid";
 import { BOT_URL } from "data/constants";
+import { Loader } from "components/Loader";
 
 export function DishView(): JSX.Element {
   const { id } = useParams();
@@ -23,7 +24,7 @@ export function DishView(): JSX.Element {
     error,
   } = useGetUserDish(Number(id), userId, !!userId);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader />;
 
   if (error) {
     return <NotFound message={error.message} />;

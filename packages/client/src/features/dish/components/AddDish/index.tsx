@@ -1,6 +1,6 @@
 import noPhoto from "@assets/images/no_photo.png";
 import { useGetMeasurements } from "@features/measurement/hooks/useGetMeasurements";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DishIngredientRemoveModal,
   DishIngredientRemoveModalParams,
@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { useMainButton } from "hooks/useMainButton";
 import { DEFAULT_BUTTON_COLOR } from "data/constants";
+import { Loader } from "components/Loader";
 
 export const AddDish = (): JSX.Element => {
   const { data: measurements, isLoading, error } = useGetMeasurements();
@@ -71,14 +72,18 @@ export const AddDish = (): JSX.Element => {
 
   const submitButton = useRef<HTMLButtonElement>(null);
 
-  useMainButton({
+  const mainButton = useMainButton({
     text: "Save",
     hideAfterClick: false,
     color: DEFAULT_BUTTON_COLOR,
     clickHandler: () => submitButton.current?.click(),
   });
 
-  if (isLoading) return <>Loading...</>;
+  useEffect(() => {
+    isLoading ? mainButton.hide() : mainButton.show();
+  }, [isLoading]);
+
+  if (isLoading) return <Loader />;
 
   if (error) {
     return <NotFound message={error.message} />;

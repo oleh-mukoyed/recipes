@@ -5,6 +5,9 @@ import { Paths } from "pages/Paths";
 import { NotFound } from "components/NotFound";
 import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { Link } from "react-router-dom";
+import { Loader } from "components/Loader";
+import { useMainButtonAdd } from "@features/dish/hooks/useMainButtonAdd";
+import { useEffect } from "react";
 
 export function DishList(): JSX.Element {
   const { data: userData } = useGetUserInfo();
@@ -12,7 +15,13 @@ export function DishList(): JSX.Element {
 
   const { data, isLoading, error } = useGetUserDishes(userId, !!userId);
 
-  if (isLoading) return <div>Loading...</div>;
+  const mainButton = useMainButtonAdd();
+
+  useEffect(() => {
+    isLoading ? mainButton.hide() : mainButton.show();
+  }, [isLoading]);
+
+  if (isLoading) return <Loader />;
 
   if (error) {
     return <NotFound message={error.message} />;

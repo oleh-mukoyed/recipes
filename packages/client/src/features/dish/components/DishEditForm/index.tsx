@@ -7,7 +7,7 @@ import {
 import noPhoto from "@assets/images/no_photo.png";
 import { LabeledField } from "components/Form/LabeledField";
 import { SelectOnFieldLabeled } from "components/Form/SelectOnFieldLabeled";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGetMeasurements } from "@features/measurement/hooks/useGetMeasurements";
 import { NotFound } from "components/NotFound";
 import { mapDishPresenterToUpdateDishDto } from "@features/dish/mappers/mapDishPresenterToUpdateDishDto";
@@ -29,6 +29,7 @@ import { useGetUserDish } from "@features/dish/hooks/useGetUserDish";
 import { Paths } from "pages/Paths";
 import { useMainButton } from "hooks/useMainButton";
 import { DEFAULT_BUTTON_COLOR } from "data/constants";
+import { Loader } from "components/Loader";
 
 export function DishEditForm(): JSX.Element {
   const { id } = useParams();
@@ -78,14 +79,18 @@ export function DishEditForm(): JSX.Element {
 
   const submitButton = useRef<HTMLButtonElement>(null);
 
-  useMainButton({
+  const mainButton = useMainButton({
     text: "Save",
     hideAfterClick: false,
     color: DEFAULT_BUTTON_COLOR,
     clickHandler: () => submitButton.current?.click(),
   });
 
-  if (isLoading || isLoadingDish) return <>Loading...</>;
+  useEffect(() => {
+    isLoading ? mainButton.hide() : mainButton.show();
+  }, [isLoading]);
+
+  if (isLoading || isLoadingDish) return <Loader />;
 
   if (error || dishError) {
     const e = error || dishError;
