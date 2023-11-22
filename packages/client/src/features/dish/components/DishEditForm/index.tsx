@@ -40,11 +40,15 @@ export function DishEditForm(): JSX.Element {
     data: dish,
     isLoading: isLoadingDish,
     error: dishError,
-  } = useGetUserDish(Number(id), userId);
+  } = useGetUserDish(Number(id), userId, !!userId);
 
   const { mutateAsync } = useUpdateDish();
 
-  const { data: measurements, isLoading, error } = useGetMeasurements();
+  const {
+    data: measurements,
+    isLoading,
+    error,
+  } = useGetMeasurements(!!dish?.id);
 
   const dishUpdateDto = mapDishPresenterToUpdateDishDto(dish as DishPresenter);
 

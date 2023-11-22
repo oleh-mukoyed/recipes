@@ -23,7 +23,6 @@ import { FormSelect } from "components/Form/FormSelect";
 import { Button, ButtonTypes } from "components/Button";
 import { Paths } from "pages/Paths";
 import { useNavigate } from "react-router-dom";
-// import { BackButton } from "components/BackButton";
 import { useGetUserInfo } from "hooks/useGetUserInfo";
 
 export const AddDish = (): JSX.Element => {
@@ -143,11 +142,6 @@ export const AddDish = (): JSX.Element => {
           />
         </div>
         <div className="mt-4">
-          {/* <input
-            type="hidden"
-            defaultValue={userId}
-            {...register("userId", { valueAsNumber: true })}
-          ></input> */}
           <LabeledField text="Name">
             <FormInput
               register={register}
@@ -227,8 +221,6 @@ export const AddDish = (): JSX.Element => {
                             register={register}
                             regName={`ingredients.${index}.measurementId`}
                             regOptions={{ valueAsNumber: true }}
-                            // onFocus={(e) => (e.target.size = 10)}
-                            // onBlur={(e) => (e.target.size = 1)}
                             options={measurements.map(
                               (m: MeasurementPresenter) => {
                                 return {
@@ -238,10 +230,6 @@ export const AddDish = (): JSX.Element => {
                               }
                             )}
                             defaultValue={ingredient.measurementId}
-                            // onChange={(e) => {
-                            //   e.target.size = 1;
-                            //   e.target.blur();
-                            // }}
                           />
                         </SelectOnFieldLabeled>
                       </LabeledField>

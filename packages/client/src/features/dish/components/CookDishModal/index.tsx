@@ -195,11 +195,6 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
 
   return (
     <>
-      {/* <Button
-        text="Cook"
-        btnType={ButtonTypes.success}
-        onClick={() => setOpenCookModal(true)}
-      /> */}
       <Transition.Root show={openCookModal} as={Fragment}>
         <Dialog static as="div" className="relative z-10" onClose={() => null}>
           <Transition.Child

@@ -10,7 +10,7 @@ export function DishList(): JSX.Element {
   const { data: userData } = useGetUserInfo();
   const userId = userData?.id || 0;
 
-  const { data, isLoading, error } = useGetUserDishes(userId);
+  const { data, isLoading, error } = useGetUserDishes(userId, !!userId);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -20,10 +20,6 @@ export function DishList(): JSX.Element {
 
   const dishes = data || [];
   const hasDishes = Array.isArray(dishes) && dishes.length;
-
-  // if (true || !Array.isArray(dishes) || !dishes.length) {
-  //   return <div>You have no dishes</div>;
-  // }
 
   return (
     <>

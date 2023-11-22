@@ -17,7 +17,11 @@ export function DishView(): JSX.Element {
   const { data: userData } = useGetUserInfo();
   const userId = userData?.id || 0;
 
-  const { data: dish, isLoading, error } = useGetUserDish(Number(id), userId);
+  const {
+    data: dish,
+    isLoading,
+    error,
+  } = useGetUserDish(Number(id), userId, !!userId);
 
   if (isLoading) return <div>Loading...</div>;
 
