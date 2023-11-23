@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useTelegram } from "./useTelegram";
 import { USER_QUERY_KEYS } from "./queryKeys";
 import { userApi } from "@api/api";
+import { useInitData } from "@vkruglikov/react-telegram-web-app";
 
 export const useGetUserInfo = () => {
-  const { user: telegramUser } = useTelegram();
-  const telegramId = telegramUser?.id
-    ? telegramUser.id.toString()
+  const [WebAppUser] = useInitData();
+  const telegramId = WebAppUser?.user?.id
+    ? WebAppUser?.user?.id.toString()
     : import.meta.env.VITE_TELEGRAM_ID || "";
 
   const query = useQuery({

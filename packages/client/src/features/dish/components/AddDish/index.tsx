@@ -27,6 +27,7 @@ import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { useMainButton } from "hooks/useMainButton";
 import { DEFAULT_BUTTON_COLOR } from "data/constants";
 import { Loader } from "components/Loader";
+import { MainButton } from "@vkruglikov/react-telegram-web-app";
 
 export const AddDish = (): JSX.Element => {
   const { data: measurements, isLoading, error } = useGetMeasurements();
@@ -72,16 +73,19 @@ export const AddDish = (): JSX.Element => {
 
   const submitButton = useRef<HTMLButtonElement>(null);
 
-  const mainButton = useMainButton({
-    text: "Save",
-    hideAfterClick: false,
-    color: DEFAULT_BUTTON_COLOR,
-    clickHandler: () => submitButton.current?.click(),
-  });
+  // const mainButton = useMainButton({
+  //   text: "Save",
+  //   hideAfterClick: false,
+  //   color: DEFAULT_BUTTON_COLOR,
+  //   clickHandler: () => submitButton.current?.click(),
+  // });
 
-  useEffect(() => {
-    isLoading ? mainButton.hide() : mainButton.show();
-  }, [isLoading]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     isLoading ? mainButton.hide() : mainButton.show();
+  //     console.log("isLoading :", isLoading);
+  //   }, 0);
+  // }, [isLoading]);
 
   if (isLoading) return <Loader />;
 
@@ -149,6 +153,7 @@ export const AddDish = (): JSX.Element => {
 
   return (
     <>
+      <MainButton text="Save" onClick={() => submitButton.current?.click()} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none lg:h-80">
           <img

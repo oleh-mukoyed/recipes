@@ -4,21 +4,52 @@ import noPhoto from "@assets/images/no_photo.png";
 import { Paths } from "pages/Paths";
 import { NotFound } from "components/NotFound";
 import { useGetUserInfo } from "hooks/useGetUserInfo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Loader } from "components/Loader";
 import { useMainButtonAdd } from "@features/dish/hooks/useMainButtonAdd";
 import { useEffect } from "react";
+import {
+  MainButton,
+  useThemeParams,
+  useWebApp,
+} from "@vkruglikov/react-telegram-web-app";
+import { SUCCESS_BUTTON_COLOR } from "data/constants";
 
 export function DishList(): JSX.Element {
   const { data: userData } = useGetUserInfo();
   const userId = userData?.id || 0;
 
+  const theme = useThemeParams();
+  const webApp = useWebApp();
+  console.log("theme :", theme);
+  const pp = {
+    accent_text_color: "#79e8d9",
+    bg_color: "#282e33",
+    button_color: "#3fc1b0",
+    button_text_color: "#ffffff",
+    destructive_text_color: "#f57474",
+    header_bg_color: "#282e33",
+    hint_color: "#82868a",
+    link_color: "#4be1c3",
+    secondary_bg_color: "#313b43",
+    section_bg_color: "#282e33",
+    section_header_text_color: "#4be1c3",
+    subtitle_text_color: "#82868a",
+    text_color: "#f5f5f5",
+  };
+
   const { data, isLoading, error } = useGetUserDishes(userId, !!userId);
 
-  const mainButton = useMainButtonAdd();
+  const navigate = useNavigate();
 
+  // const mainButton = useMainButtonAdd();
+
+  // useEffect(() => {
+  //   isLoading ? mainButton.hide() : mainButton.show();
+  // }, [isLoading]);
+  webApp.MainButton.hide();
   useEffect(() => {
-    isLoading ? mainButton.hide() : mainButton.show();
+    isLoading ? webApp.MainButton.hide() : webApp.MainButton.show();
   }, [isLoading]);
 
   if (isLoading) return <Loader />;
@@ -69,6 +100,10 @@ export function DishList(): JSX.Element {
             })}
         </div>
       )}
+      <MainButton
+        text="Add dish"
+        onClick={() => navigate(Paths.ADD_DISH_PAGE)}
+      />
     </>
   );
 }
