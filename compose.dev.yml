@@ -66,27 +66,27 @@ services:
       - CHOKIDAR_USEPOLLING=true
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
-    links:
-      - ngrok
-    depends_on:
-      - ngrok
+    # links:
+    #   - ngrok
+    # depends_on:
+    #   - ngrok
     networks:
       - recipes_dev
 
-  ngrok:
-    image: ngrok/ngrok:latest
-    restart: unless-stopped
-    command:
-      - "start"
-      - "--all"
-      - "--config"
-      - "/etc/ngrok.yml"
-    volumes:
-      - ./packages/client/docker/ngrok.yml:/etc/ngrok.yml
-    ports:
-      - "${NGROK_PORT}:${NGROK_PORT}"
-    networks:
-      - recipes_dev
+  # ngrok:
+  #   image: ngrok/ngrok:latest
+  #   restart: unless-stopped
+  #   command:
+  #     - "start"
+  #     - "--all"
+  #     - "--config"
+  #     - "/etc/ngrok.yml"
+  #   volumes:
+  #     - ./packages/client/docker/ngrok.yml:/etc/ngrok.yml
+  #   ports:
+  #     - "${NGROK_PORT}:${NGROK_PORT}"
+  #   networks:
+  #     - recipes_dev
 
   openapi_generator:
     build:
