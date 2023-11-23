@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { Button, ButtonTypes } from "components/Button";
+import { Button } from "components/Button";
 import { useNavigate } from "react-router-dom";
 
 export const BackButton = ({
@@ -14,7 +14,6 @@ export const BackButton = ({
         <ArrowLeftIcon className="h-4 w-auto text-left inline-block mr-1 pb-1" />
       }
       addClass={addClass}
-      btnType={ButtonTypes.other}
       text="Back"
       onClick={() => navigate(-1)}
     />

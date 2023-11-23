@@ -20,12 +20,11 @@ import { FormInput } from "components/Form/FormInput";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { SelectOnFieldLabeled } from "components/Form/SelectOnFieldLabeled";
 import { FormSelect } from "components/Form/FormSelect";
-import { Button, ButtonTypes } from "components/Button";
+import { Button } from "components/Button";
 import { Paths } from "pages/Paths";
 import { useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { useMainButton } from "hooks/useMainButton";
-import { DEFAULT_BUTTON_COLOR } from "data/constants";
 import { Loader } from "components/Loader";
 
 export const AddDish = (): JSX.Element => {
@@ -74,8 +73,6 @@ export const AddDish = (): JSX.Element => {
 
   const mainButton = useMainButton({
     text: "Save",
-    hideAfterClick: false,
-    color: DEFAULT_BUTTON_COLOR,
     clickHandler: () => submitButton.current?.click(),
   });
 
@@ -141,7 +138,7 @@ export const AddDish = (): JSX.Element => {
         console.log("mutateAsync dish: ", dish);
         return;
       }
-      navigate(Paths.compileDishUrl(dish.id));
+      navigate(Paths.compileDishUrl(dish.id), { replace: true });
     } catch (error) {
       console.log("mutateAsync error: ", error);
     }
@@ -197,15 +194,13 @@ export const AddDish = (): JSX.Element => {
               {fields.map((ingredient, index) => {
                 return (
                   <div className="px-0 pb-2" key={index}>
-                    {fields.length > 1 && (
-                      <div className="relative w-full">
+                    <div className="px-0 py-2 relative w-full">
+                      {fields.length > 1 && (
                         <TrashIcon
-                          className="absolute max-h-4 max-w-4 top-2 right-2 cursor-pointer"
+                          className="absolute h-4 max-w-4 top-2 right-2 cursor-pointer"
                           onClick={() => openRemoveIngredientModal(index)}
                         />
-                      </div>
-                    )}
-                    <div className="px-0 py-2">
+                      )}
                       <LabeledField text="Name">
                         <FormInput
                           register={register}
@@ -273,7 +268,6 @@ export const AddDish = (): JSX.Element => {
               <div className="mb-2">
                 <Button
                   onClick={(e) => addIngredient(e)}
-                  btnType={ButtonTypes.success}
                   text="Add new ingredient"
                   addClass="px-2 py-0.5"
                 />

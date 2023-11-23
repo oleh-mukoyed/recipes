@@ -22,5 +22,5 @@ export const useBackButton = () => {
     return () => {
       tg.BackButton.offClick(backButtonClick);
     };
-  }, [location.pathname]);
+  }, [location]);
 };

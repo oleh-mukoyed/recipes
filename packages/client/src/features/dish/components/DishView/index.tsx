@@ -7,7 +7,6 @@ import { DishRemove } from "../RemoveDish";
 import { Paths } from "pages/Paths";
 import { CustomLink } from "components/Link";
 import { useParams } from "react-router-dom";
-import { ButtonTypes } from "components/Button";
 import { PaperAirplaneIcon } from "@heroicons/react/20/solid";
 import { BOT_URL } from "data/constants";
 import { Loader } from "components/Loader";
@@ -84,21 +83,16 @@ export function DishView(): JSX.Element {
           </dl>
           <div className="text-center">
             <CookDishModal dish={dish} />
-            <CustomLink
-              text="Edit"
-              to={Paths.compileDishEditUrl(dish.id)}
-              addClass="mr-2"
-            />
-            <DishRemove dish={dish} />
+            <CustomLink text="Edit" to={Paths.compileDishEditUrl(dish.id)} />
             <CustomLink
               text="Share"
-              btnType={ButtonTypes.other}
               icon={
                 <PaperAirplaneIcon className="h-4 w-auto text-left inline-block mr-1 pb-1" />
               }
-              addClass="ml-2"
+              addClass="ml-2 mr-2"
               to={compileShareUrl()}
             />
+            <DishRemove dish={dish} />
           </div>
         </div>
       </div>

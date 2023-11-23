@@ -2,13 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+@function HexToRGB($hex) {
+  @return red($hex), green($hex), blue($hex);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
+.main_bg {
   background-color: var(--tg-theme-bg-color);
+}
+
+.main_color {
   color: var(--tg-theme-text-color);
+}
+
+.tg-hint_color {
+  color: var(--tg-theme-hint-color);
+}
+
+.tg-link_color {
+  color: var(--tg-theme-link-color);
+}
+
+.tg-button_color {
+  background-color: var(--tg-theme-button-color);
+}
+
+.tg-button_bg_as_color {
+  color: var(--tg-theme-button-color);
+}
+
+.tg-button_text_color {
+  color: var(--tg-theme-button-text-color);
+}
+
+.tg-secondary_bg_color {
+  background-color: var(--tg-theme-secondary-bg-color);
 }

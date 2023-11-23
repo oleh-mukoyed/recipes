@@ -32,9 +32,9 @@ export function DishRemove({ dish }: DishRemoveModalParams): JSX.Element {
   return (
     <>
       <Button
-        btnType={ButtonTypes.danger}
         text="Delete"
         onClick={() => setOpenRemoveModal(true)}
+        btnType={ButtonTypes.danger}
       />
       <Transition.Root show={openRemoveModal} as={Fragment}>
         <Dialog
@@ -83,7 +83,7 @@ export function DishRemove({ dish }: DishRemoveModalParams): JSX.Element {
                           Remove dish
                         </Dialog.Title>
                         <div className="mt-2">
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm tg-hint_color">
                             Are you sure you want to remove dish - {dish.name}
                           </p>
                         </div>
@@ -91,21 +91,34 @@ export function DishRemove({ dish }: DishRemoveModalParams): JSX.Element {
                     </div>
                   </div>
                   <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button
+                    <Button
+                      text="Remove"
+                      onClick={deleteDish}
+                      btnType={ButtonTypes.danger}
+                      addClass="inline-flex w-full justify-center"
+                    />
+                    {/* <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                       onClick={deleteDish}
                     >
                       Remove
-                    </button>
-                    <button
+                    </button> */}
+                    {/* <button
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={() => setOpenRemoveModal(false)}
                       ref={cancelButtonRef}
                     >
                       Cancel
-                    </button>
+                    </button> */}
+                    <Button
+                      text="Cancel"
+                      onClick={() => setOpenRemoveModal(false)}
+                      ref={cancelButtonRef}
+                      btnType={ButtonTypes.other}
+                      addClass="mt-3 inline-flex w-full justify-center"
+                    />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

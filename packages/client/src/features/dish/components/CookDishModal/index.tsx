@@ -1,6 +1,7 @@
 import { DishPresenter, IngredientPresenter } from "@api/generated";
 import { Dialog, Transition } from "@headlessui/react";
 import { CalculatorIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
+import { Button, ButtonTypes } from "components/Button";
 import { Input } from "components/Form/Input";
 import { Select } from "components/Form/Select";
 import { SelectOnFieldLabeled } from "components/Form/SelectOnFieldLabeled";
@@ -227,9 +228,10 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all w-full">
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10">
                         <CalculatorIcon
-                          className="h-6 w-6 text-green-600"
+                          // className="h-6 w-6 text-green-600"
+                          className="h-6 w-6 tg-button_bg_as_color"
                           aria-hidden="true"
                         />
                       </div>
@@ -250,17 +252,18 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
                                 key={index}
                                 className={
                                   addClass +
-                                  "justify-between items-center mb-2 mt-2 grid grid-cols-12 text-gray-900"
+                                  "justify-between items-center pt-2 mb-2 mt-2 grid grid-cols-12 text-gray-900"
                                 }
                               >
-                                <div className="text-left">
+                                <div className="text-left items-center flex">
                                   <input
+                                    autoFocus={false}
                                     type="checkbox"
-                                    className="cursor-pointer"
+                                    className="cursor-pointer w-5 h-5"
                                     onChange={(e) => checkHandler(e, index)}
                                   ></input>
                                 </div>
-                                <div className="text-left col-span-8 text-sm">
+                                <div className="text-left col-span-8 text-sm items-center flex">
                                   {ingredient.name}
                                 </div>
                                 <div className="col-span-2 text-right font-bold text-sm">
@@ -287,7 +290,8 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
                                 </div>
                                 <div className="text-right">
                                   <PencilSquareIcon
-                                    className="h-4 w-auto inline-block cursor-pointer text-green-600"
+                                    // className="h-4 w-auto inline-block cursor-pointer text-green-600"
+                                    className="h-6 w-auto inline-block cursor-pointer tg-button_bg_as_color"
                                     onClick={() =>
                                       clickCalcHandler(index, ingredient)
                                     }
@@ -302,21 +306,32 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
                   </div>
                   <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     {calculated && (
-                      <button
-                        type="button"
-                        className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto"
+                      <Button
+                        text="Reset"
+                        addClass="inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto"
                         onClick={reset}
-                      >
-                        Reset
-                      </button>
+                      />
+                      // <button
+                      //   type="button"
+                      //   className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto"
+                      //   onClick={reset}
+                      // >
+                      //   Reset
+                      // </button>
                     )}
-                    <button
+                    {/* <button
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={cancelModalHandler}
                     >
                       Cancel
-                    </button>
+                    </button> */}
+                    <Button
+                      text="Cancel"
+                      onClick={cancelModalHandler}
+                      btnType={ButtonTypes.other}
+                      addClass="mt-3 inline-flex w-full justify-center"
+                    />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -358,9 +373,9 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
                   <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                     <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                       <div className="sm:flex sm:items-start">
-                        <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10">
                           <CalculatorIcon
-                            className="h-6 w-6 text-green-600"
+                            className="h-6 w-6 tg-button_bg_as_color"
                             aria-hidden="true"
                           />
                         </div>
@@ -384,6 +399,7 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
                             <div className="relative mt-2 rounded-md shadow-sm">
                               <Input
                                 type="text"
+                                autoFocus={false}
                                 placeholder="Enter number, formats: 5, 5.1, 5.01"
                                 defaultValue={calcNumber}
                                 onBeforeInput={(e) => formatNumber(e)}
@@ -406,20 +422,32 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
                       </div>
                     </div>
                     <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                      <button
+                      <Button
+                        text="Calc"
+                        addClass="inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto"
+                        onClick={calc}
+                      />
+                      {/* <button
                         type="button"
                         className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto"
                         onClick={calc}
                       >
                         Calc
-                      </button>
-                      <button
+                      </button> */}
+
+                      <Button
+                        text="Cancel"
+                        onClick={() => setOpenCalcModal(false)}
+                        btnType={ButtonTypes.other}
+                        addClass="mt-3 inline-flex w-full justify-center"
+                      />
+                      {/* <button
                         type="button"
                         className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                         onClick={() => setOpenCalcModal(false)}
                       >
                         Cancel
-                      </button>
+                      </button> */}
                     </div>
                   </Dialog.Panel>
                 </Transition.Child>

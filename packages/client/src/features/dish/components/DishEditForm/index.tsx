@@ -1,5 +1,4 @@
 import {
-  DishPresenter,
   MeasurementPresenter,
   UpdateDishDto,
   UpdateIngredientDto,
@@ -10,9 +9,8 @@ import { SelectOnFieldLabeled } from "components/Form/SelectOnFieldLabeled";
 import { useEffect, useRef, useState } from "react";
 import { useGetMeasurements } from "@features/measurement/hooks/useGetMeasurements";
 import { NotFound } from "components/NotFound";
-import { mapDishPresenterToUpdateDishDto } from "@features/dish/mappers/mapDishPresenterToUpdateDishDto";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { Button, ButtonTypes } from "components/Button";
+import { Button } from "components/Button";
 import { useUpdateDish } from "@features/dish/hooks/useUpdateDish";
 import {
   DishIngredientRemoveModal,
@@ -28,16 +26,15 @@ import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { useGetUserDish } from "@features/dish/hooks/useGetUserDish";
 import { Paths } from "pages/Paths";
 import { useMainButton } from "hooks/useMainButton";
-import { DEFAULT_BUTTON_COLOR } from "data/constants";
 import { Loader } from "components/Loader";
 
 export function DishEditForm(): JSX.Element {
   const { id } = useParams();
-
   const navigate = useNavigate();
-
   const { data: userData } = useGetUserInfo();
   const userId = userData?.id || 0;
+
+  const { data: measurements, isLoading, error } = useGetMeasurements(!!userId);
 
   const {
     data: dish,
@@ -47,14 +44,6 @@ export function DishEditForm(): JSX.Element {
 
   const { mutateAsync } = useUpdateDish();
 
-  const {
-    data: measurements,
-    isLoading,
-    error,
-  } = useGetMeasurements(!!dish?.id);
-
-  const dishUpdateDto = mapDishPresenterToUpdateDishDto(dish as DishPresenter);
-
   const [openRemoveModal, setOpenRemoveModal] = useState(false);
   const [modalParams, setModalParams] =
     useState<DishIngredientRemoveModalParams>({
@@ -62,35 +51,70 @@ export function DishEditForm(): JSX.Element {
       index: 0,
     });
 
+  const [loaded, setLoaded] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors: formErrors },
     control,
+    setValue,
+    reset,
   } = useForm<UpdateDishDto>({
     resolver: zodResolver(updateDishSchema),
-    defaultValues: dishUpdateDto,
   });
 
-  const { fields, remove, append } = useFieldArray<UpdateDishDto>({
+  const { fields, remove, append } = useFieldArray<
+    UpdateDishDto,
+    "ingredients",
+    "key"
+  >({
     control,
     name: "ingredients",
+    keyName: "key",
   });
 
   const submitButton = useRef<HTMLButtonElement>(null);
 
   const mainButton = useMainButton({
     text: "Save",
-    hideAfterClick: false,
-    color: DEFAULT_BUTTON_COLOR,
     clickHandler: () => submitButton.current?.click(),
   });
 
   useEffect(() => {
-    isLoading ? mainButton.hide() : mainButton.show();
-  }, [isLoading]);
+    if (dish && !loaded) {
+      setValue("id", dish.id, { shouldDirty: true });
+      setValue("name", dish.name, { shouldDirty: true });
+      setValue("notes", dish.notes, { shouldDirty: true });
 
-  if (isLoading || isLoadingDish) return <Loader />;
+      if (Array.isArray(dish.ingredients)) {
+        dish.ingredients.forEach((ingredient) => {
+          const newIngredient: UpdateIngredientDto = {
+            id: ingredient.id,
+            name: ingredient.name,
+            number: ingredient.number,
+            measurementId: ingredient.measurement.id,
+          };
+
+          append(newIngredient);
+        });
+      }
+
+      setLoaded(true);
+    }
+
+    return () => {
+      reset();
+    };
+  }, [dish]);
+
+  useEffect(() => {
+    loaded && !isLoadingDish && !isLoading
+      ? mainButton.show()
+      : mainButton.hide();
+  }, [isLoading, loaded, isLoadingDish]);
+
+  if (isLoading || isLoadingDish || !loaded) return <Loader />;
 
   if (error || dishError) {
     const e = error || dishError;
@@ -146,7 +170,8 @@ export function DishEditForm(): JSX.Element {
   const onSubmit = async (data: UpdateDishDto) => {
     try {
       await mutateAsync(data);
-      navigate(Paths.compileDishUrl(dish.id));
+      navigate(-1);
+      navigate(Paths.compileDishUrl(dish.id), { replace: true });
     } catch (error) {
       console.log("mutateAsync error: ", error);
     }
@@ -159,14 +184,14 @@ export function DishEditForm(): JSX.Element {
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none lg:h-80">
           <img
             src={noPhoto}
-            alt={dishUpdateDto.name}
+            alt={dish.name}
             className="h-full w-full object-cover object-center lg:h-full lg:w-full"
           />
         </div>
         <div className="mt-4">
           <input
             type="hidden"
-            defaultValue={dishUpdateDto.id}
+            defaultValue={dish.id}
             {...register("id", { valueAsNumber: true })}
           ></input>
           <LabeledField text="Name">
@@ -175,7 +200,7 @@ export function DishEditForm(): JSX.Element {
               regName="name"
               type="text"
               placeholder="Enter name"
-              defaultValue={dishUpdateDto.name}
+              defaultValue={dish.name}
             />
           </LabeledField>
           {formErrors.name && (
@@ -190,7 +215,7 @@ export function DishEditForm(): JSX.Element {
               {...register("notes")}
               placeholder="Enter notes"
               className="w-full h-40 border-0 py-1.5 pl-2 pr-2 text-sm focus:outline-none text-gray-900 ring-1 ring-inset ring-gray-300"
-              defaultValue={dishUpdateDto?.notes || ""}
+              defaultValue={dish?.notes || ""}
             ></textarea>
           </LabeledField>
           {formErrors.notes && (
@@ -208,15 +233,13 @@ export function DishEditForm(): JSX.Element {
               {fields.map((ingredient, index) => {
                 return (
                   <div className="px-0 pb-2" key={index}>
-                    {fields.length > 1 && (
-                      <div className="relative w-full">
+                    <div className="px-0 py-2 relative w-full">
+                      {fields.length > 1 && (
                         <TrashIcon
-                          className="absolute max-h-4 max-w-4 top-2 right-2 cursor-pointer"
+                          className="absolute h-4 max-w-4 top-2 right-2 cursor-pointer"
                           onClick={() => openRemoveIngredientModal(index)}
                         />
-                      </div>
-                    )}
-                    <div className="px-0 py-2">
+                      )}
                       <input
                         type="hidden"
                         defaultValue={ingredient.id}
@@ -291,7 +314,6 @@ export function DishEditForm(): JSX.Element {
               <div className="mb-2">
                 <Button
                   onClick={(e) => addIngredient(e)}
-                  btnType={ButtonTypes.success}
                   text="Add new ingredient"
                   addClass="px-2 py-0.5"
                 />
