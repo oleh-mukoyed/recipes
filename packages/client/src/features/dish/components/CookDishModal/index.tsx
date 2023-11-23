@@ -1,13 +1,11 @@
 import { DishPresenter, IngredientPresenter } from "@api/generated";
 import { Dialog, Transition } from "@headlessui/react";
 import { CalculatorIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
-import { MainButton, useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { Input } from "components/Form/Input";
 import { Select } from "components/Form/Select";
 import { SelectOnFieldLabeled } from "components/Form/SelectOnFieldLabeled";
-import { DEFAULT_BUTTON_COLOR } from "data/constants";
 import { useMainButton } from "hooks/useMainButton";
-import { ChangeEvent, Fragment, useState } from "react";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 
 interface Cook {
   number: string;
@@ -28,16 +26,14 @@ interface Calc {
 export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
   const [openCookModal, setOpenCookModal] = useState(false);
 
-  const webApp = useWebApp();
+  const mainButton = useMainButton({
+    text: "Cook",
+    clickHandler: cookButtonHandler,
+  });
 
-  // const mainButton = useMainButton({
-  //   text: "Cook",
-  //   clickHandler: cookButtonHandler,
-  // });
-
-  // useEffect(() => {
-  //   mainButton.show();
-  // }, []);
+  useEffect(() => {
+    mainButton.show();
+  }, []);
 
   const [checked, setChecked] = useState(
     new Array<boolean>().fill(false, 0, dish.ingredients.length - 1)
@@ -193,17 +189,16 @@ export function CookDishModal({ dish }: { dish: DishPresenter }): JSX.Element {
 
   const cancelModalHandler = () => {
     setOpenCookModal(false);
-    webApp.MainButton.show();
+    mainButton.show();
   };
 
   function cookButtonHandler() {
     setOpenCookModal(true);
-    webApp.MainButton.hide();
+    mainButton.hide();
   }
 
   return (
     <>
-      <MainButton text="Cook" onClick={cookButtonHandler} />
       <Transition.Root show={openCookModal} as={Fragment}>
         <Dialog static as="div" className="relative z-10" onClose={() => null}>
           <Transition.Child

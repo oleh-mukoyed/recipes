@@ -19,36 +19,31 @@ export const useMainButton = ({
 }: Props): MainButton => {
   const { tg } = useTelegram();
   const location = useLocation();
-  //const mainButton = tg.MainButton;
+  const mainButton = tg.MainButton;
 
   const mainButtonClick = () => {
     clickHandler();
-    hideAfterClick && tg.MainButton.hide();
+    hideAfterClick && mainButton.hide();
   };
 
   useEffect(() => {
-    tg.MainButton.setParams({
+    mainButton.setParams({
       text: text,
       color: color,
     });
     //mainButton.show();
-
-    tg.MainButton.onClick(mainButtonClick);
-    console.log("text :", text);
-    console.log("color :", color);
+    mainButton.onClick(mainButtonClick);
 
     return () => {
-      //mainButton.setParams({});
-      tg.MainButton.offClick(mainButtonClick);
+      mainButton.offClick(mainButtonClick);
     };
   }, [text, color]);
 
   useEffect(() => {
     return () => {
-      //mainButton.setParams({});
-      tg.MainButton.hide();
+      mainButton.hide();
     };
   }, [location.pathname]);
 
-  return tg.MainButton;
+  return mainButton;
 };

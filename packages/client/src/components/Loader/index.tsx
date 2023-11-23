@@ -1,9 +1,11 @@
+import { useTelegram } from "hooks/useTelegram";
 import "./index.css";
-import { useThemeParams } from "@vkruglikov/react-telegram-web-app";
 
 export const Loader = () => {
-  const [, themeParams] = useThemeParams();
-  const color = themeParams?.text_color ? themeParams.text_color : "#000000";
+  const { tg } = useTelegram();
+  const color = tg?.themeParams?.text_color
+    ? tg.themeParams.text_color
+    : "#000000";
 
   const pawElements = Array.from({ length: 10 }, (_, index) => (
     <div key={index} className="paw">
