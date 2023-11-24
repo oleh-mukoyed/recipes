@@ -13,9 +13,9 @@ export const useDeleteDish = () => {
 
     onSuccess: (data) => {
       if (data?.userId) {
-        queryClient.invalidateQueries({
-          queryKey: DISH_QUERY_KEYS.userDish(data.id),
-        });
+        // queryClient.invalidateQueries({
+        //   queryKey: DISH_QUERY_KEYS.userDish(data.id),
+        // });
         queryClient.invalidateQueries({
           queryKey: DISH_QUERY_KEYS.userDishesList(data.userId),
         });

@@ -146,6 +146,9 @@ export const AddDish = (): JSX.Element => {
 
   return (
     <>
+      <h1 className="text-2xl font-bold tracking-tight mb-3">
+        {Paths.ADD_DISH_PAGE_TITLE}
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none lg:h-80">
           <img
@@ -159,6 +162,7 @@ export const AddDish = (): JSX.Element => {
             <FormInput
               register={register}
               regName="name"
+              autoComplete="false"
               type="text"
               placeholder="Enter name"
               defaultValue=""
@@ -174,6 +178,7 @@ export const AddDish = (): JSX.Element => {
           <LabeledField text="Notes">
             <textarea
               {...register("notes")}
+              autoComplete="false"
               placeholder="Enter notes"
               className="w-full h-40 border-0 py-1.5 pl-2 pr-2 text-sm focus:outline-none text-gray-900 ring-1 ring-inset ring-gray-300"
               defaultValue=""
@@ -206,6 +211,7 @@ export const AddDish = (): JSX.Element => {
                           register={register}
                           regName={`ingredients.${index}.name`}
                           type="text"
+                          autoComplete="false"
                           placeholder="Enter name"
                           defaultValue={ingredient.name}
                         />
@@ -223,6 +229,7 @@ export const AddDish = (): JSX.Element => {
                           register={register}
                           regName={`ingredients.${index}.number`}
                           type="text"
+                          autoComplete="false"
                           placeholder="Enter number, formats: 5, 5.1, 5.01"
                           defaultValue={ingredient.number}
                           onBeforeInput={(e) => formatNumber(e)}

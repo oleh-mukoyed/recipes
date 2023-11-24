@@ -14,12 +14,16 @@ export const useBackButton = () => {
   };
 
   useEffect(() => {
-    if (location.pathname === Paths.DISHES_PAGE) return;
+    if (location.pathname === Paths.DISHES_PAGE) {
+      tg.BackButton.hide();
+      return;
+    }
 
     tg.BackButton.show();
     tg.BackButton.onClick(backButtonClick);
 
     return () => {
+      tg.BackButton.hide();
       tg.BackButton.offClick(backButtonClick);
     };
   }, [location]);

@@ -22,7 +22,6 @@ import { FormInput } from "components/Form/FormInput";
 import { updateDishSchema } from "../validation/updateDishSchema";
 import { FormSelect } from "components/Form/FormSelect";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { useGetUserDish } from "@features/dish/hooks/useGetUserDish";
 import { Paths } from "pages/Paths";
 import { useMainButton } from "hooks/useMainButton";
@@ -31,16 +30,18 @@ import { Loader } from "components/Loader";
 export function DishEditForm(): JSX.Element {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: userData } = useGetUserInfo();
-  const userId = userData?.id || 0;
-
-  const { data: measurements, isLoading, error } = useGetMeasurements(!!userId);
 
   const {
     data: dish,
     isLoading: isLoadingDish,
     error: dishError,
-  } = useGetUserDish(Number(id), userId, !!userId);
+  } = useGetUserDish(Number(id));
+
+  const {
+    data: measurements,
+    isLoading,
+    error,
+  } = useGetMeasurements(!!dish?.id);
 
   const { mutateAsync } = useUpdateDish();
 
@@ -179,7 +180,9 @@ export function DishEditForm(): JSX.Element {
 
   return (
     <>
-      <h1 className="text-2xl font-bold tracking-tight mb-3">{dish.name}</h1>
+      <h1 className="text-2xl font-bold tracking-tight mb-3">
+        {Paths.compileDishEditTitle(dish.name)}
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none lg:h-80">
           <img
@@ -198,6 +201,7 @@ export function DishEditForm(): JSX.Element {
             <FormInput
               register={register}
               regName="name"
+              autoComplete="false"
               type="text"
               placeholder="Enter name"
               defaultValue={dish.name}
@@ -213,6 +217,7 @@ export function DishEditForm(): JSX.Element {
           <LabeledField text="Notes">
             <textarea
               {...register("notes")}
+              autoComplete="false"
               placeholder="Enter notes"
               className="w-full h-40 border-0 py-1.5 pl-2 pr-2 text-sm focus:outline-none text-gray-900 ring-1 ring-inset ring-gray-300"
               defaultValue={dish?.notes || ""}
@@ -250,6 +255,7 @@ export function DishEditForm(): JSX.Element {
                       <LabeledField text="Name">
                         <FormInput
                           register={register}
+                          autoComplete="false"
                           regName={`ingredients.${index}.name`}
                           type="text"
                           placeholder="Enter name"
@@ -267,6 +273,7 @@ export function DishEditForm(): JSX.Element {
                       <LabeledField text="Number">
                         <FormInput
                           register={register}
+                          autoComplete="false"
                           regName={`ingredients.${index}.number`}
                           type="text"
                           placeholder="Enter number, formats: 5, 5.1, 5.01"

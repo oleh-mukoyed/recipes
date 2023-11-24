@@ -1,4 +1,4 @@
-export function NotFound({ message }: { message: string }): JSX.Element {
+export function NotFound({ message = "" }: { message?: string }): JSX.Element {
   return (
     <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div className="text-center">

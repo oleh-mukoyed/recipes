@@ -1,7 +1,6 @@
 import noPhoto from "@assets/images/no_photo.png";
 import { useGetUserDish } from "@features/dish/hooks/useGetUserDish";
 import { NotFound } from "components/NotFound";
-import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { CookDishModal } from "../CookDishModal";
 import { DishRemove } from "../RemoveDish";
 import { Paths } from "pages/Paths";
@@ -14,14 +13,7 @@ import { Loader } from "components/Loader";
 export function DishView(): JSX.Element {
   const { id } = useParams();
 
-  const { data: userData } = useGetUserInfo();
-  const userId = userData?.id || 0;
-
-  const {
-    data: dish,
-    isLoading,
-    error,
-  } = useGetUserDish(Number(id), userId, !!userId);
+  const { data: dish, isLoading, error } = useGetUserDish(Number(id));
 
   if (isLoading) return <Loader />;
 
