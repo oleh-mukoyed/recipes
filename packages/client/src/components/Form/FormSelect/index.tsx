@@ -23,7 +23,7 @@ export function FormSelect<T extends FieldValues>({
 }: SelectProps<T>): JSX.Element {
   return (
     <select
-      className="h-full max-h-20 bg-white rounded-md border-0 bg-transparent py-0 pl-1 pr-1 text-gray-900 text-sm"
+      className="h-full max-h-20 bg-white rounded-md border-0 bg-transparent py-0 pl-1 pr-1 text-gray-900 text-lg"
       {...register(regName, regOptions)}
       {...props}
     >

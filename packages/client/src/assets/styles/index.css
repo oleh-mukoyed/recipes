@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@function HexToRGB($hex) {
-  @return red($hex), green($hex), blue($hex);
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -43,3 +39,7 @@
 .tg-secondary_bg_color {
   background-color: var(--tg-theme-secondary-bg-color);
 }
+
+/* .divide_tg > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--tg-theme-text-color) + "50";
+} */

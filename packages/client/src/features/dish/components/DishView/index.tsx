@@ -1,7 +1,6 @@
 import noPhoto from "@assets/images/no_photo.png";
 import { useGetUserDish } from "@features/dish/hooks/useGetUserDish";
 import { NotFound } from "components/NotFound";
-import { CookDishModal } from "../CookDishModal";
 import { DishRemove } from "../RemoveDish";
 import { Paths } from "pages/Paths";
 import { CustomLink } from "components/Link";
@@ -9,11 +8,27 @@ import { useParams } from "react-router-dom";
 import { PaperAirplaneIcon } from "@heroicons/react/20/solid";
 import { BOT_URL } from "data/constants";
 import { Loader } from "components/Loader";
+import { IngredientsList } from "../IngredientsList";
+import { useEffect, useState } from "react";
+import { CookDish } from "../CookDish";
+import { useMainButton } from "hooks/useMainButton";
 
 export function DishView(): JSX.Element {
   const { id } = useParams();
 
   const { data: dish, isLoading, error } = useGetUserDish(Number(id));
+
+  const [showCalc, setShowCalc] = useState(false);
+
+  const mainButton = useMainButton({
+    text: "Cook",
+    clickHandler: () => setShowCalc(!showCalc),
+  });
+
+  useEffect(() => {
+    mainButton.show();
+    showCalc ? mainButton.setText("Cancel") : mainButton.setText("Cook");
+  }, [showCalc]);
 
   if (isLoading) return <Loader />;
 
@@ -50,43 +65,26 @@ export function DishView(): JSX.Element {
         {dish.notes ? <p className="text-sm font-light">{dish.notes}</p> : ""}
       </div>
       <div>
-        <div className="mt-2 px-0">
-          <h3 className="text-base font-semibold leading-7">Ingredients:</h3>
-        </div>
-        <div className="mt-2 border-t border-gray-100">
-          <dl className="divide-y divide-gray-100">
-            {dish.ingredients.map((ingredient) => {
-              return (
-                <div
-                  className="px-0 py-2 sm:grid sm:grid-cols-3 sm:gap-4"
-                  key={ingredient.id}
-                >
-                  <dt className="text-sm font-medium leading-6">
-                    {ingredient.name}
-                  </dt>
-                  <dd className="mt-1 text-sm font-light leading-6 sm:col-span-2 sm:mt-0">
-                    {ingredient.number}
-                    {ingredient.measurement.shortName}
-                    {"."}
-                  </dd>
-                </div>
-              );
-            })}
-          </dl>
-          <div className="text-center">
-            <CookDishModal dish={dish} />
-            <CustomLink text="Edit" to={Paths.compileDishEditUrl(dish.id)} />
-            <CustomLink
-              text="Share"
-              icon={
-                <PaperAirplaneIcon className="h-4 w-auto text-left inline-block mr-1 pb-1" />
-              }
-              addClass="ml-2 mr-2"
-              to={compileShareUrl()}
-            />
-            <DishRemove dish={dish} />
-          </div>
-        </div>
+        {showCalc ? (
+          <CookDish dish={dish} mainButton={mainButton} />
+        ) : (
+          <>
+            <IngredientsList ingredients={dish.ingredients} />
+            <div className="text-center">
+              {/* <CookDishModal dish={dish} /> */}
+              <CustomLink text="Edit" to={Paths.compileDishEditUrl(dish.id)} />
+              <CustomLink
+                text="Share"
+                icon={
+                  <PaperAirplaneIcon className="h-4 w-auto text-left inline-block mr-1 pb-1" />
+                }
+                addClass="ml-2 mr-2"
+                to={compileShareUrl()}
+              />
+              <DishRemove dish={dish} />
+            </div>
+          </>
+        )}
       </div>
     </>
   );
