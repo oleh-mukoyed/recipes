@@ -16,6 +16,7 @@ export const userLoader = async () => {
   return await queryClient.fetchQuery({
     queryKey: USER_QUERY_KEYS.getUserByTelegramId(telegramId),
     queryFn: () => getUser(),
+    staleTime: 1 * 60 * 1000,
   });
 };
 

@@ -5,11 +5,12 @@ import { useGetUserInfo, userLoader } from "hooks/useGetUserInfo";
 import { queryClient } from "@api/queryClient";
 import { Params } from "react-router-dom";
 
-const userId = (await userLoader())?.id ?? 0;
-const getUserDish = (id: number) =>
-  dishApi
+const getUserDish = async (id: number) => {
+  const userId = (await userLoader())?.id ?? 0;
+  return dishApi
     .dishControllerGetDish({ id, userId })
     .then((data) => data?.data?.data);
+};
 
 export const dishLoader = async ({ params }: { params: Params<"id"> }) => {
   const id = parseInt(params.id ?? "");
