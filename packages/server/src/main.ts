@@ -26,18 +26,18 @@ async function bootstrap() {
 
   let certFilePath = '';
   let certKeyFilePath = '';
-  app.enableCors();
   if (env !== 'production') {
     certFilePath = './secrets/cert.pem';
     certKeyFilePath = './secrets/cert.key';
+    app.enableCors();
     // certFilePath = './secrets/localhost.crt';
     // certKeyFilePath = './secrets/localhost-privateKey.key';
   } else {
-    /* app.enableCors({
+    app.enableCors({
       origin: configService.getClientHost(),
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true,
-    }); */
+    });
     certFilePath = './secrets/myrecipes.space.chained.crt';
     certKeyFilePath = './secrets/private.key';
   }
