@@ -4,10 +4,6 @@ export class Paths {
   static DISH_PAGE = "/dishes/:id";
   static DISH_EDIT_PAGE = "/dishes/:id/edit";
 
-  static DISHES_PAGE_TITLE = "Dishes";
-  static ADD_DISH_PAGE_TITLE = "Add new dish";
-  static DISH_EDIT_PAGE_TITLE_PATTERN = "Edit :name";
-
   static compileDishUrl(id: number): string {
     return Paths.DISH_PAGE.replace(":id", id.toString());
   }
@@ -16,7 +12,7 @@ export class Paths {
     return Paths.DISH_EDIT_PAGE.replace(":id", id.toString());
   }
 
-  static compileDishEditTitle(name: string): string {
-    return Paths.DISH_EDIT_PAGE_TITLE_PATTERN.replace(":name", name);
+  static compileDishEditTitle(string: string, name: string): string {
+    return string.replace(":name", name);
   }
 }

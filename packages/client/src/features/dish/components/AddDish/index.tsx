@@ -26,8 +26,11 @@ import { useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { useMainButton } from "hooks/useMainButton";
 import { Loader } from "components/Loader";
+import { useTranslation } from "react-i18next";
 
 export const AddDish = (): JSX.Element => {
+  const { t } = useTranslation();
+
   const { data: measurements, isLoading, error } = useGetMeasurements();
 
   const { mutateAsync } = useAddDish();
@@ -72,7 +75,7 @@ export const AddDish = (): JSX.Element => {
   const submitButton = useRef<HTMLButtonElement>(null);
 
   const mainButton = useMainButton({
-    text: "Save",
+    text: t("main_button_save"),
     clickHandler: () => submitButton.current?.click(),
   });
 
@@ -87,11 +90,11 @@ export const AddDish = (): JSX.Element => {
   }
 
   if (userId <= 0) {
-    return <>Access denied</>;
+    return <>{t("access_denied")}</>;
   }
 
   if (!Array.isArray(measurements) || !measurements.length) {
-    return <NotFound message="Load data Error" />;
+    return <NotFound message={t("load_data_error")} />;
   }
 
   const openRemoveIngredientModal = (index: number) => {
@@ -147,7 +150,7 @@ export const AddDish = (): JSX.Element => {
   return (
     <>
       <h1 className="text-2xl font-bold tracking-tight mb-3">
-        {Paths.ADD_DISH_PAGE_TITLE}
+        {t("add_dish_page_title")}
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none lg:h-80">
@@ -158,13 +161,13 @@ export const AddDish = (): JSX.Element => {
           />
         </div>
         <div className="mt-4">
-          <LabeledField text="Name">
+          <LabeledField text={t("dishes_name_field_title")}>
             <FormInput
               register={register}
               regName="name"
               autoComplete="false"
               type="text"
-              placeholder="Enter name"
+              placeholder={t("dishes_name_field_placeholder")}
               defaultValue=""
             />
           </LabeledField>
@@ -175,11 +178,11 @@ export const AddDish = (): JSX.Element => {
           )}
         </div>
         <div className="mt-4">
-          <LabeledField text="Notes">
+          <LabeledField text={t("dishes_notes_field_title")}>
             <textarea
               {...register("notes")}
               autoComplete="false"
-              placeholder="Enter notes"
+              placeholder={t("dishes_notes_field_placeholder")}
               className="w-full h-40 border-0 py-1.5 pl-2 pr-2 text-sm focus:outline-none text-gray-900 ring-1 ring-inset ring-gray-300"
               defaultValue=""
             ></textarea>
@@ -192,7 +195,9 @@ export const AddDish = (): JSX.Element => {
         </div>
         <div>
           <div className="mt-2 px-0">
-            <h3 className="text-base font-semibold leading-7">Ingredients:</h3>
+            <h3 className="text-base font-semibold leading-7">
+              {t("dishes_ingredients_title")}
+            </h3>
           </div>
           <div className="mt-2 border-t border-gray-100">
             <dl className="divide-y divide-gray-100">
@@ -206,13 +211,17 @@ export const AddDish = (): JSX.Element => {
                           onClick={() => openRemoveIngredientModal(index)}
                         />
                       )}
-                      <LabeledField text="Name">
+                      <LabeledField
+                        text={t("dishes_ingredient_name_field_title")}
+                      >
                         <FormInput
                           register={register}
                           regName={`ingredients.${index}.name`}
                           type="text"
                           autoComplete="false"
-                          placeholder="Enter name"
+                          placeholder={t(
+                            "dishes_ingredient_name_field_placeholder"
+                          )}
                           defaultValue={ingredient.name}
                         />
                       </LabeledField>
@@ -224,17 +233,23 @@ export const AddDish = (): JSX.Element => {
                         )}
                     </div>
                     <div className="px-0 py-2">
-                      <LabeledField text="Number">
+                      <LabeledField
+                        text={t("dishes_ingredient_number_field_title")}
+                      >
                         <FormInput
                           register={register}
                           regName={`ingredients.${index}.number`}
                           type="text"
                           autoComplete="false"
-                          placeholder="Enter number, formats: 5, 5.1, 5.01"
+                          placeholder={t(
+                            "dishes_ingredient_number_field_placeholder"
+                          )}
                           defaultValue={ingredient.number}
                           onBeforeInput={(e) => formatNumber(e)}
                         />
-                        <SelectOnFieldLabeled text="Measurement">
+                        <SelectOnFieldLabeled
+                          text={t("dishes_ingredient_measurement_field_title")}
+                        >
                           <FormSelect
                             register={register}
                             regName={`ingredients.${index}.measurementId`}
@@ -275,7 +290,7 @@ export const AddDish = (): JSX.Element => {
               <div className="mb-2">
                 <Button
                   onClick={(e) => addIngredient(e)}
-                  text="Add new ingredient"
+                  text={t("dishes_add_new_ingredient_btn")}
                   addClass="px-2 py-0.5"
                 />
               </div>

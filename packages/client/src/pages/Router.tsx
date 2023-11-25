@@ -7,6 +7,7 @@ import { DishPage } from "./dish";
 import { dishLoader } from "@features/dish/hooks/useGetUserDish";
 import { DishPresenter } from "@api/generated";
 import { EditDishPage } from "./dish/EditDish";
+import { useTranslation } from "react-i18next";
 
 export interface Crumb {
   link: string;
@@ -18,13 +19,14 @@ export interface DishDetailUrlParams {
 }
 
 export function Router(): JSX.Element {
+  const { t } = useTranslation();
   const router = createBrowserRouter([
     {
       path: Paths.DISHES_PAGE,
       handle: {
         crumb: (): Crumb => ({
           link: Paths.DISHES_PAGE,
-          name: Paths.DISHES_PAGE_TITLE,
+          name: t("dishes_page_title"),
         }),
       },
       children: [
@@ -38,7 +40,7 @@ export function Router(): JSX.Element {
           handle: {
             crumb: (): Crumb => ({
               link: Paths.ADD_DISH_PAGE,
-              name: Paths.ADD_DISH_PAGE_TITLE,
+              name: t("add_dish_page_title"),
             }),
           },
         },
@@ -66,7 +68,10 @@ export function Router(): JSX.Element {
                 crumb: (data: DishPresenter): Crumb => {
                   return {
                     link: Paths.compileDishEditUrl(data.id),
-                    name: Paths.compileDishEditTitle(data.name),
+                    name: Paths.compileDishEditTitle(
+                      t("dish_edit_page_title_pattern"),
+                      data.name
+                    ),
                   };
                 },
               },

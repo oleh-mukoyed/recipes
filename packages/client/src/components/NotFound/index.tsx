@@ -1,22 +1,17 @@
+import { useTranslation } from "react-i18next";
+
 export function NotFound({ message = "" }: { message?: string }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div className="text-center">
         <p className="text-base font-semibold text-indigo-600">404</p>
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Page not found
+          {t("page_not_found")}
         </h1>
         <p className="mt-6 text-base leading-7 text-gray-600">
-          {message
-            ? message
-            : "Sorry, we couldn’t find the page you’re looking for."}
+          {message ? message : t("page_not_found_msg")}
         </p>
-        <div className="mt-10 flex items-center justify-center gap-x-6">
-          {/* <BackButton /> */}
-          {/* <a href="#" className="text-sm font-semibold text-gray-900">
-            Contact support <span aria-hidden="true">&rarr;</span>
-          </a> */}
-        </div>
       </div>
     </main>
   );

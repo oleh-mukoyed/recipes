@@ -6,12 +6,14 @@ import { DishPresenter } from "@api/generated";
 import { useDeleteDish } from "@features/dish/hooks/useDeleteDish";
 import { useNavigate } from "react-router-dom";
 import { Paths } from "pages/Paths";
+import { useTranslation } from "react-i18next";
 
 export interface DishRemoveModalParams {
   dish: DishPresenter;
 }
 
 export function DishRemove({ dish }: DishRemoveModalParams): JSX.Element {
+  const { t } = useTranslation();
   const cancelButtonRef = useRef(null);
   const [openRemoveModal, setOpenRemoveModal] = useState(false);
 
@@ -32,7 +34,7 @@ export function DishRemove({ dish }: DishRemoveModalParams): JSX.Element {
   return (
     <>
       <Button
-        text="Delete"
+        text={t("dish_remove_btn")}
         onClick={() => setOpenRemoveModal(true)}
         btnType={ButtonTypes.danger}
       />
@@ -80,11 +82,12 @@ export function DishRemove({ dish }: DishRemoveModalParams): JSX.Element {
                           as="h3"
                           className="text-base font-semibold leading-6 text-gray-900"
                         >
-                          Remove dish
+                          {t("dish_remove_popup_title")}
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm tg-hint_color">
-                            Are you sure you want to remove dish - {dish.name}
+                            {t("dish_remove_popup_msg_prefix")}
+                            {dish.name}
                           </p>
                         </div>
                       </div>
@@ -92,13 +95,13 @@ export function DishRemove({ dish }: DishRemoveModalParams): JSX.Element {
                   </div>
                   <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <Button
-                      text="Remove"
+                      text={t("dish_remove_popup_remove_btn")}
                       onClick={deleteDish}
                       btnType={ButtonTypes.danger}
                       addClass="inline-flex w-full justify-center"
                     />
                     <Button
-                      text="Cancel"
+                      text={t("dish_remove_popup_cancel_btn")}
                       onClick={() => setOpenRemoveModal(false)}
                       ref={cancelButtonRef}
                       btnType={ButtonTypes.other}

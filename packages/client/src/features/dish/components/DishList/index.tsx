@@ -8,8 +8,10 @@ import { Link } from "react-router-dom";
 import { Loader } from "components/Loader";
 import { useMainButtonAdd } from "@features/dish/hooks/useMainButtonAdd";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export function DishList(): JSX.Element {
+  const { t } = useTranslation();
   const { data: userData } = useGetUserInfo();
   const userId = userData?.id || 0;
 
@@ -32,9 +34,11 @@ export function DishList(): JSX.Element {
 
   return (
     <>
-      <h1 className="text-2xl font-bold tracking-tight mb-3">Dishes</h1>
+      <h1 className="text-2xl font-bold tracking-tight mb-3">
+        {t("dishes_page_title")}
+      </h1>
       {!hasDishes ? (
-        <p>You have no dishes. Add your first dish.</p>
+        <p>{t("dishes_page_empty_msg")}</p>
       ) : (
         <div className="">
           {dishes.length &&

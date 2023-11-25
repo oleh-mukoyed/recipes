@@ -1,14 +1,18 @@
 import { IngredientPresenter } from "@api/generated";
+import { useTranslation } from "react-i18next";
 
 export const IngredientsList = ({
   ingredients,
 }: {
   ingredients: Array<IngredientPresenter>;
 }): JSX.Element => {
+  const { t } = useTranslation();
   return (
     <>
       <div className="mt-2 px-0">
-        <h3 className="text-base font-semibold leading-7">Ingredients:</h3>
+        <h3 className="text-base font-semibold leading-7">
+          {t("dishes_ingredients_title")}
+        </h3>
       </div>
       <div className="mt-2 border-t">
         <div className="divide-y mb-2">

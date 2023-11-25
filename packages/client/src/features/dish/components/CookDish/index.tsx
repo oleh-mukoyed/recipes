@@ -7,6 +7,7 @@ import { Select } from "components/Form/Select";
 import { SelectOnFieldLabeled } from "components/Form/SelectOnFieldLabeled";
 import React from "react";
 import { ChangeEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Cook {
   number: string;
@@ -31,6 +32,7 @@ export function CookDish({
   dish: DishPresenter;
   mainButton: MainButton;
 }): JSX.Element {
+  const { t } = useTranslation();
   const [checked, setChecked] = useState(
     new Array<boolean>().fill(false, 0, dish.ingredients.length - 1)
   );
@@ -248,11 +250,11 @@ export function CookDish({
               {calcItem && calcItem.index === index && (
                 <div className="py-3 text-center">
                   <h3 className="text-base font-semibold leading-6">
-                    Calculate ingredients by: {calcItem.item.name}
+                    {t("dishes_cook_calculate_by")} {calcItem.item.name}
                   </h3>
                   <div className="mt-2 tg-hint_color">
                     <div>
-                      Initial value:{" "}
+                      {t("dishes_cook_initial_value")}{" "}
                       <span className="font-semibold">
                         {calcItem.item.number}
                         {calcItem.item.measurement.shortName}
@@ -263,12 +265,14 @@ export function CookDish({
                       <Input
                         type="text"
                         autoFocus={false}
-                        placeholder="Enter number, formats: 5, 5.1, 5.01"
+                        placeholder={t("dishes_cook_number_field_placeholder")}
                         defaultValue={calcNumber}
                         onBeforeInput={(e) => formatNumber(e)}
                         onChange={(e) => setCalcNumber(e.target.value)}
                       />
-                      <SelectOnFieldLabeled text="Measurement">
+                      <SelectOnFieldLabeled
+                        text={t("dishes_cook_measurement_field_title")}
+                      >
                         <Select
                           options={Object.values(calcItem.measurementsOptions)}
                           defaultValue={calcMeasurement}
@@ -280,12 +284,12 @@ export function CookDish({
                     </div>
                     <div className="px-4 py-3 sm:px-6">
                       <Button
-                        text="Calc"
+                        text={t("dishes_cook_calc_btn")}
                         addClass="w-full rounded-md text-lg shadow-sm"
                         onClick={calc}
                       />
                       <Button
-                        text="Cancel"
+                        text={t("dishes_cook_cancel_btn")}
                         onClick={clearCalcItem}
                         btnType={ButtonTypes.other}
                         addClass="mt-3 text-lg w-full"
@@ -301,7 +305,7 @@ export function CookDish({
       {calculated && (
         <div className="mx-4 my-3">
           <Button
-            text="Reset"
+            text={t("dishes_cook_reset_btn")}
             addClass="w-full rounded-md font-semibold shadow-sm"
             onClick={reset}
           />

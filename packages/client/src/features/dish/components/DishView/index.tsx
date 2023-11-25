@@ -12,22 +12,26 @@ import { IngredientsList } from "../IngredientsList";
 import { useEffect, useState } from "react";
 import { CookDish } from "../CookDish";
 import { useMainButton } from "hooks/useMainButton";
+import { useTranslation } from "react-i18next";
 
 export function DishView(): JSX.Element {
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const { data: dish, isLoading, error } = useGetUserDish(Number(id));
 
   const [showCalc, setShowCalc] = useState(false);
 
   const mainButton = useMainButton({
-    text: "Cook",
+    text: t("main_button_cook"),
     clickHandler: () => setShowCalc(!showCalc),
   });
 
   useEffect(() => {
     mainButton.show();
-    showCalc ? mainButton.setText("Cancel") : mainButton.setText("Cook");
+    showCalc
+      ? mainButton.setText(t("main_button_cancel"))
+      : mainButton.setText(t("main_button_cook"));
   }, [showCalc]);
 
   if (isLoading) return <Loader />;
@@ -37,7 +41,7 @@ export function DishView(): JSX.Element {
   }
 
   if (!dish) {
-    return <NotFound message="Dish not found" />;
+    return <NotFound message={t("dish_not_found")} />;
   }
 
   const compileShareUrl = (): string => {
@@ -72,13 +76,16 @@ export function DishView(): JSX.Element {
             <IngredientsList ingredients={dish.ingredients} />
             <div className="text-center">
               {/* <CookDishModal dish={dish} /> */}
-              <CustomLink text="Edit" to={Paths.compileDishEditUrl(dish.id)} />
               <CustomLink
-                text="Share"
+                text={t("dish_button_edit")}
+                to={Paths.compileDishEditUrl(dish.id)}
+              />
+              <CustomLink
+                text={t("dish_button_share")}
                 icon={
                   <PaperAirplaneIcon className="h-4 w-auto text-left inline-block mr-1 pb-1" />
                 }
-                addClass="ml-2 mr-2"
+                addClass="ml-2 mr-2 mb-2"
                 to={compileShareUrl()}
               />
               <DishRemove dish={dish} />

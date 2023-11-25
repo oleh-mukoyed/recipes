@@ -2,6 +2,7 @@ import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { Button, ButtonTypes } from "components/Button";
+import { useTranslation } from "react-i18next";
 
 export interface DishIngredientRemoveModalParams {
   name: string;
@@ -22,6 +23,7 @@ export function DishIngredientRemoveModal({
   setOpen: setOpenRemoveModal,
 }: DishRemoveModalProps): JSX.Element {
   const cancelButtonRef = useRef(null);
+  const { t } = useTranslation();
 
   const removeHandler = () => {
     remove(index);
@@ -73,11 +75,12 @@ export function DishIngredientRemoveModal({
                         as="h3"
                         className="text-base font-semibold leading-6 text-gray-900"
                       >
-                        Remove ingredient
+                        {t("remove_ingredient_popup_title")}
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm tg-hint_color">
-                          Are you sure you want to remove ingredient - {name}
+                          {t("remove_ingredient_popup_ask_prefix")}
+                          {name}
                         </p>
                       </div>
                     </div>
@@ -85,33 +88,18 @@ export function DishIngredientRemoveModal({
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <Button
-                    text="Remove"
+                    text={t("remove_ingredient_popup_remove_btn")}
                     btnType={ButtonTypes.danger}
                     addClass="inline-flex w-full justify-center"
                     onClick={removeHandler}
                   />
                   <Button
-                    text="Cancel"
+                    text={t("remove_ingredient_popup_cancel_btn")}
                     btnType={ButtonTypes.other}
                     addClass="mt-3 inline-flex w-full justify-center"
                     onClick={() => setOpenRemoveModal(false)}
                     ref={cancelButtonRef}
                   />
-                  {/* <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={removeHandler}
-                  >
-                    Remove
-                  </button>
-                  <button
-                    type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    onClick={() => setOpenRemoveModal(false)}
-                    ref={cancelButtonRef}
-                  >
-                    Cancel
-                  </button> */}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
