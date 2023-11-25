@@ -38,7 +38,7 @@ async function bootstrap() {
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true,
     }); */
-    certFilePath = './secrets/certificate.crt';
+    certFilePath = './secrets/myrecipes.space.chained.crt';
     certKeyFilePath = './secrets/private.key';
   }
   const httpsOptions = {
