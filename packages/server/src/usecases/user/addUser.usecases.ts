@@ -2,7 +2,7 @@ import { ILogger } from 'src/domain/logger/logger.interface';
 import { UserModel } from 'src/domain/model/user';
 import { UserRepository } from 'src/domain/repositories/userRepository.interface';
 
-export class addUserUseCases {
+export class addOrUpdateUserUseCases {
   constructor(
     private readonly logger: ILogger,
     private readonly userRepository: UserRepository,
@@ -13,11 +13,8 @@ export class addUserUseCases {
     user.telegramId = telegramId;
     if (info) user.info = info;
 
-    const result = await this.userRepository.insert(user);
-    this.logger.log(
-      'addUserUseCases execute',
-      `New user have been inserted - ${result.id}`,
-    );
+    const result = await this.userRepository.insertOrUpdate(user);
+    this.logger.log('addOrUpdateUserUseCases execute', `User - ${result.id}`);
 
     return result;
   }

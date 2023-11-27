@@ -1071,9 +1071,9 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        userControllerAddUser: async (addUserDto: AddUserDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        userControllerAddOrUpdateUser: async (addUserDto: AddUserDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'addUserDto' is not null or undefined
-            assertParamExists('userControllerAddUser', 'addUserDto', addUserDto)
+            assertParamExists('userControllerAddOrUpdateUser', 'addUserDto', addUserDto)
             const localVarPath = `/api_v1/user/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1152,8 +1152,8 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async userControllerAddUser(addUserDto: AddUserDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserControllerGetUserByTelegramId200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.userControllerAddUser(addUserDto, options);
+        async userControllerAddOrUpdateUser(addUserDto: AddUserDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserControllerGetUserByTelegramId200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.userControllerAddOrUpdateUser(addUserDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1178,12 +1178,12 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
     return {
         /**
          * 
-         * @param {UserApiUserControllerAddUserRequest} requestParameters Request parameters.
+         * @param {UserApiUserControllerAddOrUpdateUserRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        userControllerAddUser(requestParameters: UserApiUserControllerAddUserRequest, options?: AxiosRequestConfig): AxiosPromise<UserControllerGetUserByTelegramId200Response> {
-            return localVarFp.userControllerAddUser(requestParameters.addUserDto, options).then((request) => request(axios, basePath));
+        userControllerAddOrUpdateUser(requestParameters: UserApiUserControllerAddOrUpdateUserRequest, options?: AxiosRequestConfig): AxiosPromise<UserControllerGetUserByTelegramId200Response> {
+            return localVarFp.userControllerAddOrUpdateUser(requestParameters.addUserDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1198,15 +1198,15 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
 };
 
 /**
- * Request parameters for userControllerAddUser operation in UserApi.
+ * Request parameters for userControllerAddOrUpdateUser operation in UserApi.
  * @export
- * @interface UserApiUserControllerAddUserRequest
+ * @interface UserApiUserControllerAddOrUpdateUserRequest
  */
-export interface UserApiUserControllerAddUserRequest {
+export interface UserApiUserControllerAddOrUpdateUserRequest {
     /**
      * 
      * @type {AddUserDto}
-     * @memberof UserApiUserControllerAddUser
+     * @memberof UserApiUserControllerAddOrUpdateUser
      */
     readonly addUserDto: AddUserDto
 }
@@ -1234,13 +1234,13 @@ export interface UserApiUserControllerGetUserByTelegramIdRequest {
 export class UserApi extends BaseAPI {
     /**
      * 
-     * @param {UserApiUserControllerAddUserRequest} requestParameters Request parameters.
+     * @param {UserApiUserControllerAddOrUpdateUserRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public userControllerAddUser(requestParameters: UserApiUserControllerAddUserRequest, options?: AxiosRequestConfig) {
-        return UserApiFp(this.configuration).userControllerAddUser(requestParameters.addUserDto, options).then((request) => request(this.axios, this.basePath));
+    public userControllerAddOrUpdateUser(requestParameters: UserApiUserControllerAddOrUpdateUserRequest, options?: AxiosRequestConfig) {
+        return UserApiFp(this.configuration).userControllerAddOrUpdateUser(requestParameters.addUserDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

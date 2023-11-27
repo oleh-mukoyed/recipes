@@ -1,36 +1,28 @@
-import { Inject } from '@nestjs/common';
-import { Command, Ctx, Message, On, Update } from 'nestjs-telegraf';
-import { addUserUseCases } from 'src/usecases/user/addUser.usecases';
-import { getUserByTelegramIdUseCases } from 'src/usecases/user/getUserByTelegramId.usecases';
-import { Context, Markup } from 'telegraf';
-
-import { EnvironmentConfigService } from '../config/environment-config/environment-config.service';
-import { UseCaseProxy } from '../usecases-proxy/usecases-proxy';
-import { UseCasesProxyModule } from '../usecases-proxy/usecases-proxy.module';
+import { Command, Ctx, On, Update } from 'nestjs-telegraf';
+import { Context } from 'telegraf';
 
 @Update()
 export class BotUpdate {
-  constructor(
-    private readonly configService: EnvironmentConfigService,
-    @Inject(UseCasesProxyModule.POST_USER_USE_CASES_PROXY)
-    private readonly addUserUseCasesProxy: UseCaseProxy<addUserUseCases>,
-    @Inject(UseCasesProxyModule.GET_USER_BY_TELEGRAM_ID_USE_CASES_PROXY)
-    private readonly getUserByTelegramIdUseCases: UseCaseProxy<getUserByTelegramIdUseCases>,
-  ) {}
+  constructor() // private readonly addOrUpdateUserUseCasesProxy: UseCaseProxy<addOrUpdateUserUseCases>, // @Inject(UseCasesProxyModule.POST_USER_USE_CASES_PROXY) // private readonly configService: EnvironmentConfigService,
+  // @Inject(UseCasesProxyModule.GET_USER_BY_TELEGRAM_ID_USE_CASES_PROXY)
+  // private readonly getUserByTelegramIdUseCases: UseCaseProxy<getUserByTelegramIdUseCases>,
+  {}
 
   @Command('start')
   async start(@Ctx() ctx: Context) {
-    const telegramId = ctx.message.from.id.toString();
-    const info = JSON.stringify(ctx.message.from);
+    // const telegramId = ctx.message.from.id.toString();
+    // const info = JSON.stringify(ctx.message.from);
 
-    const user = await this.getUserByTelegramIdUseCases
-      .getInstance()
-      .execute(telegramId);
+    // const user = await this.getUserByTelegramIdUseCases
+    //   .getInstance()
+    //   .execute(telegramId);
 
-    console.log('user :', user);
-    if (!user) {
-      await this.addUserUseCasesProxy.getInstance().execute(telegramId, info);
-    }
+    // console.log('user :', user);
+    // if (!user) {
+    //   await this.addOrUpdateUserUseCasesProxy
+    //     .getInstance()
+    //     .execute(telegramId, info);
+    // }
 
     ctx.reply(
       '🐈',

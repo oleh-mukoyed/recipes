@@ -5,7 +5,7 @@ import { getUserDishUseCases } from 'src/usecases/dish/getUserDish.usecases';
 import { getUserDishesUseCases } from 'src/usecases/dish/getUserDishes.usecases';
 import { updateDishUseCases } from 'src/usecases/dish/updateDish.usecases';
 import { getMeasurementsUseCases } from 'src/usecases/measurement/getMeasurements.usecases';
-import { addUserUseCases } from 'src/usecases/user/addUser.usecases';
+import { addOrUpdateUserUseCases } from 'src/usecases/user/addUser.usecases';
 import { getUserByTelegramIdUseCases } from 'src/usecases/user/getUserByTelegramId.usecases';
 
 import { ExceptionsModule } from '../exceptions/exceptions.module';
@@ -42,7 +42,10 @@ export class UseCasesProxyModule {
           useFactory: (
             logger: LoggerService,
             userRepository: DatabaseUserRepository,
-          ) => new UseCaseProxy(new addUserUseCases(logger, userRepository)),
+          ) =>
+            new UseCaseProxy(
+              new addOrUpdateUserUseCases(logger, userRepository),
+            ),
         },
         {
           inject: [LoggerService, DatabaseUserRepository],

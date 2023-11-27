@@ -13,7 +13,7 @@ import { ResponseInterceptor } from 'src/infrastructure/common/interceptors/resp
 import { ApiResponseType } from 'src/infrastructure/common/swagger/response.decorator';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases-proxy';
 import { UseCasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases-proxy.module';
-import { addUserUseCases } from 'src/usecases/user/addUser.usecases';
+import { addOrUpdateUserUseCases } from 'src/usecases/user/addUser.usecases';
 import { getUserByTelegramIdUseCases } from 'src/usecases/user/getUserByTelegramId.usecases';
 
 import { AddUserDto } from './user.dto';
@@ -28,16 +28,16 @@ import { UserPresenter } from './user.presenter';
 export class UserController {
   constructor(
     @Inject(UseCasesProxyModule.POST_USER_USE_CASES_PROXY)
-    private readonly addUserUseCasesProxy: UseCaseProxy<addUserUseCases>,
+    private readonly addOrUpdateUserUseCasesProxy: UseCaseProxy<addOrUpdateUserUseCases>,
     @Inject(UseCasesProxyModule.GET_USER_BY_TELEGRAM_ID_USE_CASES_PROXY)
     private readonly getUserByTelegramIdUseCasesProxy: UseCaseProxy<getUserByTelegramIdUseCases>,
   ) {}
 
   @Post('user')
   @ApiResponseType(UserPresenter, true)
-  async addUser(@Body() addUserDto: AddUserDto) {
+  async addOrUpdateUser(@Body() addUserDto: AddUserDto) {
     const { telegramId, info } = addUserDto;
-    const addResult = await this.addUserUseCasesProxy
+    const addResult = await this.addOrUpdateUserUseCasesProxy
       .getInstance()
       .execute(telegramId, info);
 

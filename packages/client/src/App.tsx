@@ -1,12 +1,12 @@
 import { Loader } from "components/Loader";
-import { useGetUserInfo } from "hooks/useGetUserInfo";
 import { Router } from "pages/Router";
 
 import "i18n";
 import { useTranslation } from "react-i18next";
+import { useAddOrUpdateUser } from "hooks/useAddOrUpdateUser";
 
 export default function App(): JSX.Element {
-  const { data, isLoading, error } = useGetUserInfo();
+  const { data, isLoading, error } = useAddOrUpdateUser();
   const { t } = useTranslation();
 
   if (isLoading) return <Loader />;
