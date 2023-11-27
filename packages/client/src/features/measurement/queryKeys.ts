@@ -1,3 +1,3 @@
 export const MEASUREMENT_QUERY_KEYS = {
-  measurementsList: () => ["measurementsList"],
+  measurementsList: (locale: string) => ["measurementsList", locale],
 };

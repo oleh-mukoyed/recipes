@@ -1,4 +1,10 @@
-import { Controller, Get, Inject, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoggingInterceptor } from 'src/infrastructure/common/interceptors/logger.interceptor';
 import { ResponseInterceptor } from 'src/infrastructure/common/interceptors/response.interceptor';
@@ -23,10 +29,10 @@ export class MeasurementController {
 
   @Get('measurements')
   @ApiResponseType(MeasurementPresenter, true)
-  async getMeasurements() {
+  async getMeasurements(@Query('locale') locale: string) {
     const result = await this.getMeasurementsUseCasesProxy
       .getInstance()
-      .execute();
+      .execute(locale);
 
     return result.map(
       (measurementModel) => new MeasurementPresenter(measurementModel),

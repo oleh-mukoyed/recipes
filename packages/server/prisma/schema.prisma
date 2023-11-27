@@ -48,15 +48,33 @@ model Ingredient {
 }
 
 model Measurement {
-  id              Int          @id @default(autoincrement())
-  sort            Int          @default(500)
-  name            String       @db.VarChar(255)
-  shortName       String       @db.VarChar(255)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id              Int                    @id @default(autoincrement())
+  sort            Int                    @default(500)
+  name            String                 @db.VarChar(255)
+  shortName       String                 @db.VarChar(255)
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
   childMultiplier Float?
-  childId         Int?         @unique
-  child           Measurement? @relation("MeasurementRelations", fields: [childId], references: [id])
-  parent          Measurement? @relation("MeasurementRelations")
+  childId         Int?                   @unique
+  child           Measurement?           @relation("MeasurementRelations", fields: [childId], references: [id])
+  parent          Measurement?           @relation("MeasurementRelations")
   ingredients     Ingredient[]
+  localeName      MeasurementName[]
+  localeShortName MeasurementShortName[]
+}
+
+model MeasurementName {
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(255)
+  locale        String      @db.VarChar(255)
+  measurementId Int
+  measurement   Measurement @relation(fields: [measurementId], references: [id], onDelete: Cascade)
+}
+
+model MeasurementShortName {
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(255)
+  locale        String      @db.VarChar(255)
+  measurementId Int
+  measurement   Measurement @relation(fields: [measurementId], references: [id], onDelete: Cascade)
 }

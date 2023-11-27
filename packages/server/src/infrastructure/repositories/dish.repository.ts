@@ -144,22 +144,22 @@ export class DatabaseDishRepository implements DishRepository {
             measurement: {
               select: {
                 id: true,
-                name: true,
-                shortName: true,
+                //name: true,
+                //shortName: true,
                 childMultiplier: true,
                 child: {
                   select: {
                     id: true,
-                    name: true,
-                    shortName: true,
+                    //name: true,
+                    //shortName: true,
                     childMultiplier: true,
                   },
                 },
                 parent: {
                   select: {
                     id: true,
-                    name: true,
-                    shortName: true,
+                    //name: true,
+                    //shortName: true,
                     childMultiplier: true,
                   },
                 },

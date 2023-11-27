@@ -5,6 +5,7 @@ export const OTHER_BUTTON_COLOR = "#2563eb";
 
 export const BOT_URL = "https://t.me/my_recipesBot";
 
+export const DEFAULT_LANGUAGE = "en";
 export const LANGUAGES = [
   { label: "English", code: "en" },
   { label: "Ukrainian", code: "uk" },

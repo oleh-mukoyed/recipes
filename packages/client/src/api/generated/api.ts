@@ -972,10 +972,13 @@ export const MeasurementApiAxiosParamCreator = function (configuration?: Configu
     return {
         /**
          * 
+         * @param {string} locale 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        measurementControllerGetMeasurements: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        measurementControllerGetMeasurements: async (locale: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'locale' is not null or undefined
+            assertParamExists('measurementControllerGetMeasurements', 'locale', locale)
             const localVarPath = `/api_v1/measurement/measurements`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -987,6 +990,10 @@ export const MeasurementApiAxiosParamCreator = function (configuration?: Configu
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (locale !== undefined) {
+                localVarQueryParameter['locale'] = locale;
+            }
 
 
     
@@ -1011,11 +1018,12 @@ export const MeasurementApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {string} locale 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async measurementControllerGetMeasurements(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeasurementControllerGetMeasurements200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.measurementControllerGetMeasurements(options);
+        async measurementControllerGetMeasurements(locale: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeasurementControllerGetMeasurements200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.measurementControllerGetMeasurements(locale, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -1030,14 +1038,29 @@ export const MeasurementApiFactory = function (configuration?: Configuration, ba
     return {
         /**
          * 
+         * @param {MeasurementApiMeasurementControllerGetMeasurementsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        measurementControllerGetMeasurements(options?: AxiosRequestConfig): AxiosPromise<MeasurementControllerGetMeasurements200Response> {
-            return localVarFp.measurementControllerGetMeasurements(options).then((request) => request(axios, basePath));
+        measurementControllerGetMeasurements(requestParameters: MeasurementApiMeasurementControllerGetMeasurementsRequest, options?: AxiosRequestConfig): AxiosPromise<MeasurementControllerGetMeasurements200Response> {
+            return localVarFp.measurementControllerGetMeasurements(requestParameters.locale, options).then((request) => request(axios, basePath));
         },
     };
 };
+
+/**
+ * Request parameters for measurementControllerGetMeasurements operation in MeasurementApi.
+ * @export
+ * @interface MeasurementApiMeasurementControllerGetMeasurementsRequest
+ */
+export interface MeasurementApiMeasurementControllerGetMeasurementsRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof MeasurementApiMeasurementControllerGetMeasurements
+     */
+    readonly locale: string
+}
 
 /**
  * MeasurementApi - object-oriented interface
@@ -1048,12 +1071,13 @@ export const MeasurementApiFactory = function (configuration?: Configuration, ba
 export class MeasurementApi extends BaseAPI {
     /**
      * 
+     * @param {MeasurementApiMeasurementControllerGetMeasurementsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MeasurementApi
      */
-    public measurementControllerGetMeasurements(options?: AxiosRequestConfig) {
-        return MeasurementApiFp(this.configuration).measurementControllerGetMeasurements(options).then((request) => request(this.axios, this.basePath));
+    public measurementControllerGetMeasurements(requestParameters: MeasurementApiMeasurementControllerGetMeasurementsRequest, options?: AxiosRequestConfig) {
+        return MeasurementApiFp(this.configuration).measurementControllerGetMeasurements(requestParameters.locale, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

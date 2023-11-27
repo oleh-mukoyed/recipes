@@ -8,8 +8,8 @@ export class getMeasurementsUseCases {
     private readonly measurementRepository: MeasurementRepository,
   ) {}
 
-  async execute(): Promise<MeasurementModel[]> {
-    const result = await this.measurementRepository.findAll();
+  async execute(locale: string): Promise<MeasurementModel[]> {
+    const result = await this.measurementRepository.findAll(locale);
     this.logger.log(
       'getMeasurementsUseCases execute',
       `measurements - ${result.length}`,
