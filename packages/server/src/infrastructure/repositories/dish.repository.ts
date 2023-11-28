@@ -119,7 +119,7 @@ export class DatabaseDishRepository implements DishRepository {
   async findAllForUser(userId: number): Promise<DishModel[]> {
     const result = await this.prisma.dish.findMany({
       where: { userId: userId, active: true },
-      orderBy: [{ sort: 'asc' }, { createdAt: 'asc' }],
+      orderBy: [{ sort: 'asc' }, { id: 'asc' }],
       select: { id: true, sort: true, userId: true, name: true, notes: true },
     });
 
@@ -175,7 +175,7 @@ export class DatabaseDishRepository implements DishRepository {
                 },
               },
             },
-            orderBy: [{ sort: 'asc' }, { createdAt: 'asc' }],
+            orderBy: [{ id: 'asc' }],
           },
         },
       })
