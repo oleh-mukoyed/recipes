@@ -8,8 +8,16 @@ export class getUserDishUseCases {
     private readonly dishRepository: DishRepository,
   ) {}
 
-  async execute(id: number, userId: number): Promise<DishModel> {
-    const result = await this.dishRepository.findByIdForUser(id, userId);
+  async execute(
+    id: number,
+    userId: number,
+    locale: string,
+  ): Promise<DishModel> {
+    const result = await this.dishRepository.findByIdForUser(
+      id,
+      userId,
+      locale,
+    );
     this.logger.log(
       'getUserDishesUseCases execute',
       `User - ${userId}, dish id - ${result.id}`,

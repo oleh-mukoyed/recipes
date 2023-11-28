@@ -4,11 +4,15 @@ import { DISH_QUERY_KEYS } from "./queryKeys";
 import { useGetUserInfo, userLoader } from "hooks/useGetUserInfo";
 import { queryClient } from "@api/queryClient";
 import { Params } from "react-router-dom";
+import { DEFAULT_LANGUAGE } from "data/constants";
 
 const getUserDish = async (id: number) => {
   const userId = (await userLoader())?.id ?? 0;
+  const locale =
+    window?.Telegram?.WebApp?.initDataUnsafe?.user?.language_code ??
+    DEFAULT_LANGUAGE;
   return dishApi
-    .dishControllerGetDish({ id, userId })
+    .dishControllerGetDish({ id, userId, locale })
     .then((data) => data?.data?.data);
 };
 

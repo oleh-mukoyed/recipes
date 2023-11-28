@@ -126,50 +126,83 @@ export class DatabaseDishRepository implements DishRepository {
     return result as Array<DishModel>;
   }
 
-  async findByIdForUser(id: number, userId: number): Promise<DishModel> {
-    const result = await this.prisma.dish.findFirstOrThrow({
-      where: { id: id, userId: userId, active: true },
-      select: {
-        id: true,
-        sort: true,
-        name: true,
-        notes: true,
-        userId: true,
-        ingredients: {
-          select: {
-            id: true,
-            sort: true,
-            name: true,
-            number: true,
-            measurement: {
-              select: {
-                id: true,
-                //name: true,
-                //shortName: true,
-                childMultiplier: true,
-                child: {
-                  select: {
-                    id: true,
-                    //name: true,
-                    //shortName: true,
-                    childMultiplier: true,
+  async findByIdForUser(
+    id: number,
+    userId: number,
+    locale: string,
+  ): Promise<DishModel> {
+    const measurementSelectFields = {
+      id: true,
+      childMultiplier: true,
+      localeName: {
+        select: { name: true },
+        where: { locale: locale },
+      },
+      localeShortName: {
+        select: { name: true },
+        where: { locale: locale },
+      },
+    };
+
+    const result = await this.prisma.dish
+      .findFirstOrThrow({
+        where: { id: id, userId: userId, active: true },
+        select: {
+          id: true,
+          sort: true,
+          name: true,
+          notes: true,
+          userId: true,
+          ingredients: {
+            select: {
+              id: true,
+              sort: true,
+              name: true,
+              number: true,
+              measurement: {
+                select: {
+                  ...measurementSelectFields,
+                  child: {
+                    select: {
+                      ...measurementSelectFields,
+                    },
                   },
-                },
-                parent: {
-                  select: {
-                    id: true,
-                    //name: true,
-                    //shortName: true,
-                    childMultiplier: true,
+                  parent: {
+                    select: {
+                      ...measurementSelectFields,
+                    },
                   },
                 },
               },
             },
+            orderBy: [{ sort: 'asc' }, { createdAt: 'asc' }],
           },
-          orderBy: [{ sort: 'asc' }, { createdAt: 'asc' }],
         },
-      },
-    });
+      })
+      .then((dish) => ({
+        ...dish,
+        ingredients: dish.ingredients.map((ingredient) => ({
+          ...ingredient,
+          measurement: {
+            id: ingredient.measurement.id,
+            childMultiplier: ingredient.measurement.childMultiplier,
+            name: ingredient.measurement.localeName[0].name,
+            shortName: ingredient.measurement.localeShortName[0].name,
+            child: {
+              id: ingredient.measurement.id,
+              childMultiplier: ingredient.measurement.childMultiplier,
+              name: ingredient.measurement.localeName[0].name,
+              shortName: ingredient.measurement.localeShortName[0].name,
+            },
+            parent: {
+              id: ingredient.measurement.id,
+              childMultiplier: ingredient.measurement.childMultiplier,
+              name: ingredient.measurement.localeName[0].name,
+              shortName: ingredient.measurement.localeShortName[0].name,
+            },
+          },
+        })),
+      }));
 
     return result as DishModel;
   }

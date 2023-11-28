@@ -8,7 +8,7 @@ import { PrismaService } from '../prisma.service';
 export class DatabaseMeasurementRepository implements MeasurementRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(locale = 'en'): Promise<MeasurementModel[]> {
+  async findAll(locale: string): Promise<MeasurementModel[]> {
     const selectFields = {
       id: true,
       sort: true,

@@ -593,14 +593,17 @@ export const DishApiAxiosParamCreator = function (configuration?: Configuration)
          * 
          * @param {number} id 
          * @param {number} userId 
+         * @param {string} locale 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        dishControllerGetDish: async (id: number, userId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        dishControllerGetDish: async (id: number, userId: number, locale: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('dishControllerGetDish', 'id', id)
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('dishControllerGetDish', 'userId', userId)
+            // verify required parameter 'locale' is not null or undefined
+            assertParamExists('dishControllerGetDish', 'locale', locale)
             const localVarPath = `/api_v1/dish/dish`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -619,6 +622,10 @@ export const DishApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (userId !== undefined) {
                 localVarQueryParameter['userId'] = userId;
+            }
+
+            if (locale !== undefined) {
+                localVarQueryParameter['locale'] = locale;
             }
 
 
@@ -737,11 +744,12 @@ export const DishApiFp = function(configuration?: Configuration) {
          * 
          * @param {number} id 
          * @param {number} userId 
+         * @param {string} locale 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async dishControllerGetDish(id: number, userId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DishControllerGetDishes200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.dishControllerGetDish(id, userId, options);
+        async dishControllerGetDish(id: number, userId: number, locale: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DishControllerGetDishes200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.dishControllerGetDish(id, userId, locale, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -799,7 +807,7 @@ export const DishApiFactory = function (configuration?: Configuration, basePath?
          * @throws {RequiredError}
          */
         dishControllerGetDish(requestParameters: DishApiDishControllerGetDishRequest, options?: AxiosRequestConfig): AxiosPromise<DishControllerGetDishes200Response> {
-            return localVarFp.dishControllerGetDish(requestParameters.id, requestParameters.userId, options).then((request) => request(axios, basePath));
+            return localVarFp.dishControllerGetDish(requestParameters.id, requestParameters.userId, requestParameters.locale, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -869,6 +877,13 @@ export interface DishApiDishControllerGetDishRequest {
      * @memberof DishApiDishControllerGetDish
      */
     readonly userId: number
+
+    /**
+     * 
+     * @type {string}
+     * @memberof DishApiDishControllerGetDish
+     */
+    readonly locale: string
 }
 
 /**
@@ -936,7 +951,7 @@ export class DishApi extends BaseAPI {
      * @memberof DishApi
      */
     public dishControllerGetDish(requestParameters: DishApiDishControllerGetDishRequest, options?: AxiosRequestConfig) {
-        return DishApiFp(this.configuration).dishControllerGetDish(requestParameters.id, requestParameters.userId, options).then((request) => request(this.axios, this.basePath));
+        return DishApiFp(this.configuration).dishControllerGetDish(requestParameters.id, requestParameters.userId, requestParameters.locale, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

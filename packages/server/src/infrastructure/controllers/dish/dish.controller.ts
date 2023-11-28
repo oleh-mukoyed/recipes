@@ -67,10 +67,11 @@ export class DishController {
   async getDish(
     @Query('id', ParseIntPipe) id: number,
     @Query('userId', ParseIntPipe) userId: number,
+    @Query('locale') locale: string,
   ) {
     const result = await this.getUserDishUseCasesProxy
       .getInstance()
-      .execute(id, userId);
+      .execute(id, userId, locale);
 
     return new DishPresenter(result);
   }
