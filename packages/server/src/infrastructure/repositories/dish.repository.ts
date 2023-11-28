@@ -181,27 +181,37 @@ export class DatabaseDishRepository implements DishRepository {
       })
       .then((dish) => ({
         ...dish,
-        ingredients: dish.ingredients.map((ingredient) => ({
-          ...ingredient,
-          measurement: {
-            id: ingredient.measurement.id,
-            childMultiplier: ingredient.measurement.childMultiplier,
-            name: ingredient.measurement.localeName[0].name,
-            shortName: ingredient.measurement.localeShortName[0].name,
-            child: {
+        ingredients: dish.ingredients.map((ingredient) => {
+          let tmp = {
+            ...ingredient,
+            measurement: {
               id: ingredient.measurement.id,
               childMultiplier: ingredient.measurement.childMultiplier,
               name: ingredient.measurement.localeName[0].name,
               shortName: ingredient.measurement.localeShortName[0].name,
             },
-            parent: {
-              id: ingredient.measurement.id,
-              childMultiplier: ingredient.measurement.childMultiplier,
-              name: ingredient.measurement.localeName[0].name,
-              shortName: ingredient.measurement.localeShortName[0].name,
-            },
-          },
-        })),
+          };
+
+          if (ingredient.measurement?.child) {
+            tmp.measurement['child'] = {
+              id: ingredient.measurement.child.id,
+              childMultiplier: ingredient.measurement.child.childMultiplier,
+              name: ingredient.measurement.child.localeName[0].name,
+              shortName: ingredient.measurement.child.localeShortName[0].name,
+            };
+          }
+
+          if (ingredient.measurement?.parent) {
+            tmp.measurement['parent'] = {
+              id: ingredient.measurement.parent.id,
+              childMultiplier: ingredient.measurement.parent.childMultiplier,
+              name: ingredient.measurement.parent.localeName[0].name,
+              shortName: ingredient.measurement.parent.localeShortName[0].name,
+            };
+          }
+
+          return tmp;
+        }),
       }));
 
     return result as DishModel;

@@ -40,27 +40,37 @@ export class DatabaseMeasurementRepository implements MeasurementRepository {
         },
       })
       .then((measurements) =>
-        measurements.map((measurement) => ({
-          id: measurement.id,
-          sort: measurement.sort,
-          childMultiplier: measurement.childMultiplier,
-          name: measurement.localeName[0].name,
-          shortName: measurement.localeShortName[0].name,
-          child: {
+        measurements.map((measurement) => {
+          let newMeasurement = {
             id: measurement.id,
             sort: measurement.sort,
             childMultiplier: measurement.childMultiplier,
             name: measurement.localeName[0].name,
             shortName: measurement.localeShortName[0].name,
-          },
-          parent: {
-            id: measurement.id,
-            sort: measurement.sort,
-            childMultiplier: measurement.childMultiplier,
-            name: measurement.localeName[0].name,
-            shortName: measurement.localeShortName[0].name,
-          },
-        })),
+          };
+
+          if (measurement?.child) {
+            newMeasurement['child'] = {
+              id: measurement.child.id,
+              sort: measurement.child.sort,
+              childMultiplier: measurement.child.childMultiplier,
+              name: measurement.child.localeName[0].name,
+              shortName: measurement.child.localeShortName[0].name,
+            };
+          }
+
+          if (measurement?.parent) {
+            newMeasurement['parent'] = {
+              id: measurement.parent.id,
+              sort: measurement.parent.sort,
+              childMultiplier: measurement.parent.childMultiplier,
+              name: measurement.parent.localeName[0].name,
+              shortName: measurement.parent.localeShortName[0].name,
+            };
+          }
+
+          return newMeasurement;
+        }),
       );
 
     return result as Array<MeasurementModel>;
