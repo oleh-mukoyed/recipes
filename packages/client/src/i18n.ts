@@ -37,7 +37,7 @@ i18n.use(initReactI18next).init({
         dishes_notes_field_placeholder: "Enter notes",
         dishes_ingredient_name_field_title: "Name",
         dishes_ingredient_name_field_placeholder: "Enter name",
-        dishes_ingredient_number_field_title: "Number",
+        dishes_ingredient_number_field_title: "Amount",
         dishes_ingredient_number_field_placeholder:
           "Enter number, formats: 5, 5.1, 5.01",
         dishes_ingredient_measurement_field_title: "Measurement",
@@ -74,14 +74,14 @@ i18n.use(initReactI18next).init({
 
         ingredient_validation_name_req: "Name is required",
         ingredient_validation_name_max: "Max length is 255",
-        ingredient_validation_number_req: "Number is required",
+        ingredient_validation_number_req: "Amount is required",
         ingredient_validation_number_format:
           "Enter number, formats: 5, 5.1, 5.01",
       },
     },
     uk: {
       translation: {
-        access_denied: "Доступ заборонено",
+        access_denied: "Немає доступу",
 
         main_button_add: "Додати",
         main_button_save: "Зберегти",
@@ -102,12 +102,12 @@ i18n.use(initReactI18next).init({
         dishes_page_title: "Страви",
         dishes_page_empty_msg: "У вас немає страв. Додайте свою першу страву.",
         dishes_ingredients_title: "Інгредієнти:",
-        dishes_name_field_title: "Ім'я",
-        dishes_name_field_placeholder: "Введіть ім'я",
+        dishes_name_field_title: "Назва",
+        dishes_name_field_placeholder: "Введіть назву",
         dishes_notes_field_title: "Примітки",
         dishes_notes_field_placeholder: "Введіть примітки",
-        dishes_ingredient_name_field_title: "Ім'я",
-        dishes_ingredient_name_field_placeholder: "Введіть ім'я",
+        dishes_ingredient_name_field_title: "Назва",
+        dishes_ingredient_name_field_placeholder: "Введіть назву",
         dishes_ingredient_number_field_title: "Кількість",
         dishes_ingredient_number_field_placeholder:
           "Введіть число, формати: 5, 5.1, 5.01",
@@ -138,13 +138,13 @@ i18n.use(initReactI18next).init({
 
         dish_edit_page_title_pattern: "Редагувати :name",
 
-        dish_validation_name_req: "Необхідно вказати ім'я",
+        dish_validation_name_req: "Необхідно вказати назву",
         dish_validation_name_max: "Максимальна довжина 255",
         dish_validation_notes_max: "Максимальна довжина 3000",
         dish_ingredients_validation_req:
           "Страва повинна містити хоча б один інгредієнт",
 
-        ingredient_validation_name_req: "Необхідно вказати ім'я",
+        ingredient_validation_name_req: "Необхідно вказати назву",
         ingredient_validation_name_max: "Максимальна довжина 255",
         ingredient_validation_number_req: "Необхідно вказати кількість",
         ingredient_validation_number_format:
